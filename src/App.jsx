@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import Dashboard from './components/Dashboard';
 import RegistrationForm from './components/RegistrationForm';
@@ -6,8 +6,39 @@ import VisitList from './components/VisitList';
 import Reports from './components/Reports';
 import PatientMaster from './components/PatientMaster';
 
+const VALID_TABS = ['dashboard', 'pendaftaran', 'riwayat', 'laporan', 'pasien'];
+
 export default function App() {
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [activeTab, setActiveTabState] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const hash = window.location.hash.replace('#', '').toLowerCase();
+      if (VALID_TABS.includes(hash)) return hash;
+
+      const savedTab = localStorage.getItem('klinik_active_tab');
+      if (savedTab && VALID_TABS.includes(savedTab)) return savedTab;
+    }
+    return 'dashboard';
+  });
+
+  const setActiveTab = (tab) => {
+    if (!VALID_TABS.includes(tab)) return;
+    setActiveTabState(tab);
+    localStorage.setItem('klinik_active_tab', tab);
+    window.history.replaceState(null, '', `#${tab}`);
+  };
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.replace('#', '').toLowerCase();
+      if (VALID_TABS.includes(hash)) {
+        setActiveTabState(hash);
+        localStorage.setItem('klinik_active_tab', hash);
+      }
+    };
+
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
 
   return (
     <div className="min-h-screen text-slate-800 flex flex-col font-['Plus_Jakarta_Sans',sans-serif] selection:bg-sky-500 selection:text-white">
