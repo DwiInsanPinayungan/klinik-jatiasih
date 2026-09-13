@@ -57,6 +57,7 @@ export default function VisitList() {
   const handleEditClick = (visit) => {
     setEditingVisit(visit);
     setEditForm({
+      nama_pasien: visit.nama_pasien || '',
       tanggal_kunjungan: visit.tanggal_kunjungan,
       waktu_kunjungan: visit.waktu_kunjungan,
       poli_id: visit.poli_id,
@@ -275,7 +276,7 @@ export default function VisitList() {
                   <Edit3 className="w-5 h-5 text-amber-500" />
                   <span>Perbaiki Data Kunjungan (REQ-04)</span>
                 </h3>
-                <p className="text-xs text-sky-600 font-mono mt-0.5">{editingVisit.no_registrasi} - {editingVisit.nama_pasien}</p>
+                <p className="text-xs text-sky-600 font-mono mt-0.5">{editingVisit.no_registrasi} • RM: {editingVisit.no_rm}</p>
               </div>
               <button
                 onClick={() => setEditingVisit(null)}
@@ -286,6 +287,18 @@ export default function VisitList() {
             </div>
 
             <form onSubmit={handleSaveEdit} className="space-y-4 text-xs">
+              <div>
+                <label className="block font-bold text-slate-700 mb-1">Nama Pasien</label>
+                <input
+                  type="text"
+                  value={editForm.nama_pasien || ''}
+                  onChange={(e) => setEditForm({ ...editForm, nama_pasien: e.target.value })}
+                  placeholder="Ketik nama lengkap pasien..."
+                  className="w-full p-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 outline-none font-bold text-sky-900"
+                  required
+                />
+              </div>
+
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block font-bold text-slate-700 mb-1">Tanggal Kunjungan</label>

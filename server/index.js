@@ -353,6 +353,19 @@ app.put('/api/kunjungan/:id', async (req, res) => {
       status_pasien: body.status_pasien || visit.status_pasien
     };
 
+    // Update Nama Pasien if provided
+    if (body.nama_pasien && visit.pasien_id) {
+      const pid = Number(visit.pasien_id);
+      if (isMysqlConnected() && pool) {
+        await pool.query('UPDATE pasien SET nama = ? WHERE id = ?', [body.nama_pasien.trim(), pid]);
+      } else {
+        const pIdx = db.pasien.findIndex(p => p.id === pid);
+        if (pIdx !== -1) {
+          db.pasien[pIdx].nama = body.nama_pasien.trim();
+        }
+      }
+    }
+
     if (isMysqlConnected() && pool) {
       await pool.query(
         'UPDATE kunjungan SET tanggal_kunjungan = ?, waktu_kunjungan = ?, poli_id = ?, dokter_id = ?, penjamin = ?, no_kartu_penjamin = ?, tindakan = ?, catatan = ?, status_pasien = ? WHERE id = ?',
