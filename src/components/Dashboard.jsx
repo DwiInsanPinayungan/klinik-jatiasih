@@ -43,12 +43,83 @@ export default function Dashboard({ setActiveTab }) {
 
   if (!data) return null;
 
-  // Chart Data Configurations
+  // Chart Data & Style Configurations
+  const barOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#0f172a',
+        titleFont: { family: 'Plus Jakarta Sans', size: 12, weight: '700' },
+        bodyFont: { family: 'Plus Jakarta Sans', size: 12, weight: '600' },
+        padding: 12,
+        cornerRadius: 12,
+        displayColors: false,
+        callbacks: {
+          label: (context) => ` Jumlah: ${context.raw} Pasien`
+        }
+      }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          stepSize: 1,
+          precision: 0,
+          color: '#64748b',
+          font: { family: 'Plus Jakarta Sans', size: 11, weight: '600' }
+        },
+        grid: {
+          color: '#f1f5f9',
+          drawBorder: false
+        }
+      },
+      x: {
+        ticks: {
+          color: '#475569',
+          font: { family: 'Plus Jakarta Sans', size: 11, weight: '600' },
+          maxRotation: 0,
+          minRotation: 0
+        },
+        grid: {
+          display: false
+        }
+      }
+    }
+  };
+
+  const doughnutOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    cutout: '74%',
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: {
+          usePointStyle: true,
+          pointStyle: 'circle',
+          padding: 16,
+          font: { family: 'Plus Jakarta Sans', size: 12, weight: '600' },
+          color: '#334155'
+        }
+      },
+      tooltip: {
+        backgroundColor: '#0f172a',
+        titleFont: { family: 'Plus Jakarta Sans', size: 12, weight: '700' },
+        bodyFont: { family: 'Plus Jakarta Sans', size: 12, weight: '600' },
+        padding: 12,
+        cornerRadius: 12
+      }
+    }
+  };
+
   const statusChartData = {
     labels: ['Pasien Baru', 'Pasien Lama'],
     datasets: [{
       data: [data.statusCounts?.Baru || 0, data.statusCounts?.Lama || 0],
       backgroundColor: ['#0284c7', '#38bdf8'],
+      hoverOffset: 6,
       borderWidth: 0
     }]
   };
@@ -58,6 +129,7 @@ export default function Dashboard({ setActiveTab }) {
     datasets: [{
       data: [data.penjaminCounts?.Umum || 0, data.penjaminCounts?.['BPJS/JKN'] || 0],
       backgroundColor: ['#10b981', '#6366f1'],
+      hoverOffset: 6,
       borderWidth: 0
     }]
   };
@@ -67,6 +139,7 @@ export default function Dashboard({ setActiveTab }) {
     datasets: [{
       data: [data.genderCounts?.L || 0, data.genderCounts?.P || 0],
       backgroundColor: ['#0284c7', '#f43f5e'],
+      hoverOffset: 6,
       borderWidth: 0
     }]
   };
@@ -77,7 +150,9 @@ export default function Dashboard({ setActiveTab }) {
       label: 'Jumlah Pasien',
       data: Object.values(data.ageGroupCounts || {}),
       backgroundColor: ['#f59e0b', '#10b981', '#06b6d4', '#0284c7', '#8b5cf6'],
-      borderRadius: 8
+      hoverBackgroundColor: ['#d97706', '#059669', '#0891b2', '#0369a1', '#7c3aed'],
+      borderRadius: 8,
+      maxBarThickness: 42
     }]
   };
 
@@ -86,9 +161,10 @@ export default function Dashboard({ setActiveTab }) {
     datasets: [{
       label: 'Jumlah Kunjungan',
       data: Object.values(data.poliCounts || {}),
-      backgroundColor: '#0284c7',
-      hoverBackgroundColor: '#0369a1',
-      borderRadius: 8
+      backgroundColor: ['#0284c7', '#06b6d4', '#10b981', '#6366f1', '#8b5cf6', '#f59e0b'],
+      hoverBackgroundColor: ['#0369a1', '#0891b2', '#059669', '#4f46e5', '#7c3aed', '#d97706'],
+      borderRadius: 8,
+      maxBarThickness: 42
     }]
   };
 
@@ -192,10 +268,10 @@ export default function Dashboard({ setActiveTab }) {
               </div>
               <span>Pasien Baru vs Lama</span>
             </h3>
-            <span className="text-xs font-bold bg-sky-50 text-sky-700 px-2.5 py-1 rounded-full border border-sky-100">REQ-03</span>
+            <span className="text-xs font-bold bg-sky-50 text-sky-700 px-2.5 py-1 rounded-full border border-sky-100">Status Pasien</span>
           </div>
           <div className="w-48 h-48 mx-auto my-2">
-            <Doughnut data={statusChartData} options={{ maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }} />
+            <Doughnut data={statusChartData} options={doughnutOptions} />
           </div>
           <div className="mt-4 pt-4 border-t border-slate-100 text-xs text-slate-500 flex justify-around text-center">
             <div className="bg-sky-50/70 px-4 py-2 rounded-xl border border-sky-100/60 w-full mr-1.5">
@@ -218,10 +294,10 @@ export default function Dashboard({ setActiveTab }) {
               </div>
               <span>Distribusi Penjamin</span>
             </h3>
-            <span className="text-xs font-bold bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-full border border-emerald-100">REQ-06</span>
+            <span className="text-xs font-bold bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-full border border-emerald-100">Kategori Penjamin</span>
           </div>
           <div className="w-48 h-48 mx-auto my-2">
-            <Pie data={penjaminChartData} options={{ maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }} />
+            <Pie data={penjaminChartData} options={doughnutOptions} />
           </div>
           <div className="mt-4 pt-4 border-t border-slate-100 text-xs text-slate-500 flex justify-around text-center">
             <div className="bg-emerald-50/70 px-4 py-2 rounded-xl border border-emerald-100/60 w-full mr-1.5">
@@ -244,10 +320,10 @@ export default function Dashboard({ setActiveTab }) {
               </div>
               <span>Jenis Kelamin</span>
             </h3>
-            <span className="text-xs font-bold bg-rose-50 text-rose-700 px-2.5 py-1 rounded-full border border-rose-100">REQ-07</span>
+            <span className="text-xs font-bold bg-rose-50 text-rose-700 px-2.5 py-1 rounded-full border border-rose-100">Demografi Gender</span>
           </div>
           <div className="w-48 h-48 mx-auto my-2">
-            <Doughnut data={genderChartData} options={{ maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }} />
+            <Doughnut data={genderChartData} options={doughnutOptions} />
           </div>
           <div className="mt-4 pt-4 border-t border-slate-100 text-xs text-slate-500 flex justify-around text-center">
             <div className="bg-sky-50/70 px-4 py-2 rounded-xl border border-sky-100/60 w-full mr-1.5">
@@ -266,7 +342,7 @@ export default function Dashboard({ setActiveTab }) {
       {/* Bar Charts Row: Rentang Usia & Per Poli */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         
-        {/* Bar Chart: Rentang Usia Pasien (REQ-08) */}
+        {/* Bar Chart: Rentang Usia Pasien */}
         <div className="bg-white p-6 rounded-2xl border border-sky-100 shadow-sm hover:shadow-md transition-all duration-200">
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-extrabold text-slate-800 text-base flex items-center space-x-2">
@@ -275,10 +351,10 @@ export default function Dashboard({ setActiveTab }) {
               </div>
               <span>Rekapitulasi Berdasarkan Rentang Usia</span>
             </h3>
-            <span className="text-xs font-bold bg-amber-50 text-amber-700 px-2.5 py-1 rounded-full border border-amber-100">REQ-08</span>
+            <span className="text-xs font-bold bg-amber-50 text-amber-700 px-2.5 py-1 rounded-full border border-amber-100">Kelompok Usia</span>
           </div>
           <div className="h-64">
-            <Bar data={ageChartData} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } } }} />
+            <Bar data={ageChartData} options={barOptions} />
           </div>
         </div>
 
@@ -291,10 +367,10 @@ export default function Dashboard({ setActiveTab }) {
               </div>
               <span>Kunjungan per Poli / Pelayanan</span>
             </h3>
-            <span className="text-xs font-bold bg-sky-50 text-sky-700 px-2.5 py-1 rounded-full border border-sky-100">REQ-02</span>
+            <span className="text-xs font-bold bg-sky-50 text-sky-700 px-2.5 py-1 rounded-full border border-sky-100">Pelayanan Medis</span>
           </div>
           <div className="h-64">
-            <Bar data={poliChartData} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } } }} />
+            <Bar data={poliChartData} options={barOptions} />
           </div>
         </div>
 
