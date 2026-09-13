@@ -178,13 +178,13 @@ export default function VisitList() {
             <table className="w-full text-left text-xs">
               <thead className="bg-sky-50/80 border-b border-sky-100 text-sky-900 font-extrabold uppercase tracking-wider">
                 <tr>
-                  <th className="px-4 py-4">No. Reg / Tgl</th>
-                  <th className="px-4 py-4">Pasien & No. RM</th>
-                  <th className="px-4 py-4">Status</th>
-                  <th className="px-4 py-4">Gender / Usia</th>
-                  <th className="px-4 py-4">Poli & Dokter</th>
-                  <th className="px-4 py-4">Penjamin</th>
-                  <th className="px-4 py-4">Tindakan</th>
+                  <th className="px-4 py-4 text-center">No. Reg / Tgl</th>
+                  <th className="px-4 py-4 text-left">Pasien & No. RM</th>
+                  <th className="px-4 py-4 text-center">Status</th>
+                  <th className="px-4 py-4 text-center">Gender / Usia</th>
+                  <th className="px-4 py-4 text-left">Poli & Dokter</th>
+                  <th className="px-4 py-4 text-center">Penjamin</th>
+                  <th className="px-4 py-4 text-left">Tindakan</th>
                   <th className="px-4 py-4 text-center">Aksi (REQ-04)</th>
                 </tr>
               </thead>
@@ -192,17 +192,17 @@ export default function VisitList() {
                 {visits.map(v => (
                   <tr key={v.id} className="hover:bg-sky-50/60 transition-colors duration-150">
                     
-                    <td className="px-4 py-3.5 font-mono">
+                    <td className="px-4 py-3.5 font-mono text-center">
                       <span className="font-bold text-slate-800">{v.no_registrasi}</span>
                       <p className="text-slate-400 text-[11px]">{v.tanggal_kunjungan} ({v.waktu_kunjungan})</p>
                     </td>
 
-                    <td className="px-4 py-3.5">
+                    <td className="px-4 py-3.5 text-left">
                       <span className="font-extrabold text-sky-700 text-sm">{v.nama_pasien}</span>
                       <p className="text-slate-500 font-mono text-[11px]">{v.no_rm}</p>
                     </td>
 
-                    <td className="px-4 py-3.5 whitespace-nowrap">
+                    <td className="px-4 py-3.5 whitespace-nowrap text-center">
                       <span className={`inline-flex items-center px-3 py-1 rounded-full font-extrabold text-[11px] whitespace-nowrap shadow-xs ${
                         v.status_pasien === 'Baru'
                           ? 'bg-sky-100 text-sky-800 border border-sky-200'
@@ -212,17 +212,17 @@ export default function VisitList() {
                       </span>
                     </td>
 
-                    <td className="px-4 py-3.5 whitespace-nowrap">
+                    <td className="px-4 py-3.5 whitespace-nowrap text-center">
                       <span className="font-bold text-slate-700">{v.jenis_kelamin === 'L' ? 'Laki-Laki' : 'Perempuan'}</span>
                       <p className="text-slate-500 text-[11px]">{v.usia} th ({v.rentang_usia})</p>
                     </td>
 
-                    <td className="px-4 py-3.5 min-w-[140px]">
+                    <td className="px-4 py-3.5 min-w-[140px] text-left">
                       <span className="font-bold text-slate-800">{v.nama_poli}</span>
                       <p className="text-slate-500 text-[11px]">{v.nama_dokter}</p>
                     </td>
 
-                    <td className="px-4 py-3.5 whitespace-nowrap">
+                    <td className="px-4 py-3.5 whitespace-nowrap text-center">
                       <span className={`inline-flex items-center px-3 py-1 rounded-lg text-[11px] font-extrabold whitespace-nowrap ${
                         v.penjamin === 'BPJS/JKN' ? 'bg-emerald-100 text-emerald-800 border border-emerald-200' : 'bg-slate-100 text-slate-700 border border-slate-200'
                       }`}>
@@ -230,7 +230,7 @@ export default function VisitList() {
                       </span>
                     </td>
 
-                    <td className="px-4 py-3.5 max-w-xs truncate text-slate-600">
+                    <td className="px-4 py-3.5 max-w-xs truncate text-slate-600 text-left">
                       {v.tindakan || '-'}
                     </td>
 

@@ -262,53 +262,54 @@ export default function Reports() {
             <table className="w-full text-left text-xs">
               <thead className="bg-sky-50/80 border-b border-sky-100 text-sky-900 font-extrabold uppercase tracking-wider">
                 <tr>
-                  <th className="px-4 py-4">No</th>
-                  <th className="px-4 py-4">No. Reg / Tgl</th>
-                  <th className="px-4 py-4">No. RM</th>
-                  <th className="px-4 py-4">Nama Pasien</th>
-                  <th className="px-4 py-4">Status</th>
-                  <th className="px-4 py-4">Gender (REQ-07)</th>
-                  <th className="px-4 py-4">Usia & Kategori (REQ-08)</th>
-                  <th className="px-4 py-4">Poli / Dokter</th>
-                  <th className="px-4 py-4">Penjamin (REQ-06)</th>
-                  <th className="px-4 py-4">Tindakan Medis</th>
+                  <th className="px-4 py-4 text-center">No</th>
+                  <th className="px-4 py-4 text-center">No. Reg / Tgl</th>
+                  <th className="px-4 py-4 text-center">No. RM</th>
+                  <th className="px-4 py-4 text-left">Nama Pasien</th>
+                  <th className="px-4 py-4 text-center">Status</th>
+                  <th className="px-4 py-4 text-center">Gender (REQ-07)</th>
+                  <th className="px-4 py-4 text-center">Usia & Kategori (REQ-08)</th>
+                  <th className="px-4 py-4 text-left">Poli / Dokter</th>
+                  <th className="px-4 py-4 text-center">Penjamin (REQ-06)</th>
+                  <th className="px-4 py-4 text-left">Tindakan Medis</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-sky-50">
                 {detail.map((item, idx) => (
                   <tr key={item.id} className="hover:bg-sky-50/60 transition-colors duration-150">
-                    <td className="px-4 py-3.5 font-bold text-slate-400">{idx + 1}</td>
-                    <td className="px-4 py-3.5 font-mono">
+                    <td className="px-4 py-3.5 font-bold text-slate-400 text-center">{idx + 1}</td>
+                    <td className="px-4 py-3.5 font-mono text-center">
                       <span className="font-bold text-slate-800">{item.no_registrasi}</span>
                       <p className="text-slate-400 text-[11px]">{item.tanggal_kunjungan}</p>
                     </td>
-                    <td className="px-4 py-3.5 font-mono font-bold text-sky-700">{item.no_rm}</td>
-                    <td className="px-4 py-3.5 whitespace-nowrap">
+                    <td className="px-4 py-3.5 font-mono font-bold text-sky-700 text-center">{item.no_rm}</td>
+                    <td className="px-4 py-3.5 font-extrabold text-sky-700 text-left whitespace-nowrap">{item.nama_pasien}</td>
+                    <td className="px-4 py-3.5 whitespace-nowrap text-center">
                       <span className={`inline-flex items-center px-3 py-1 rounded-full text-[11px] font-extrabold whitespace-nowrap shadow-xs ${
                         item.status_pasien === 'Baru' ? 'bg-sky-100 text-sky-800 border border-sky-200' : 'bg-indigo-100 text-indigo-800 border border-indigo-200'
                       }`}>
                         Pasien {item.status_pasien}
                       </span>
                     </td>
-                    <td className="px-4 py-3.5 font-bold whitespace-nowrap">
+                    <td className="px-4 py-3.5 font-bold whitespace-nowrap text-center">
                       {item.jenis_kelamin === 'L' ? <span className="text-sky-600">Laki-Laki</span> : <span className="text-rose-500">Perempuan</span>}
                     </td>
-                    <td className="px-4 py-3.5 whitespace-nowrap">
+                    <td className="px-4 py-3.5 whitespace-nowrap text-center">
                       <span className="font-bold text-slate-700">{item.usia} th</span>
                       <p className="text-slate-400 text-[11px]">{item.rentang_usia}</p>
                     </td>
-                    <td className="px-4 py-3.5 min-w-[140px]">
+                    <td className="px-4 py-3.5 min-w-[140px] text-left">
                       <span className="font-bold text-slate-800">{item.nama_poli}</span>
                       <p className="text-slate-400 text-[11px]">{item.nama_dokter}</p>
                     </td>
-                    <td className="px-4 py-3.5 font-extrabold whitespace-nowrap">
+                    <td className="px-4 py-3.5 font-extrabold whitespace-nowrap text-center">
                       <span className={`inline-flex items-center px-3 py-1 rounded-lg text-[11px] font-extrabold whitespace-nowrap ${
                         item.penjamin === 'BPJS/JKN' ? 'bg-emerald-100 text-emerald-800 border border-emerald-200' : 'bg-slate-100 text-slate-700 border border-slate-200'
                       }`}>
                         {item.penjamin}
                       </span>
                     </td>
-                    <td className="px-4 py-3.5 text-slate-600">{item.tindakan || '-'}</td>
+                    <td className="px-4 py-3.5 text-slate-600 text-left">{item.tindakan || '-'}</td>
                   </tr>
                 ))}
               </tbody>
