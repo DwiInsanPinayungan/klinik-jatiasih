@@ -23,15 +23,9 @@ export default function Header({ activeTab, setActiveTab }) {
               className="w-12 h-12 rounded-full object-cover shadow-md ring-2 ring-sky-100 transition-all duration-300 group-hover:scale-105 shrink-0" 
             />
             <div className="min-w-0">
-              <div className="flex items-center space-x-2">
-                <h1 className="text-base sm:text-lg font-black text-slate-800 tracking-tight leading-none group-hover:text-sky-700 transition-colors whitespace-nowrap">
-                  KLINIK UTAMA JATI ASIH MEDIKA
-                </h1>
-                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200 shrink-0">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse mr-1"></span>
-                  Realtime
-                </span>
-              </div>
+              <h1 className="text-base sm:text-lg font-black text-slate-800 tracking-tight leading-none group-hover:text-sky-700 transition-colors whitespace-nowrap">
+                KLINIK UTAMA JATI ASIH MEDIKA
+              </h1>
               <p className="text-[11px] text-sky-600 font-bold tracking-wide whitespace-nowrap mt-1">
                 Sistem Pendaftaran & Rekapitulasi Pasien
               </p>

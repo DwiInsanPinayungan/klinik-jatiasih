@@ -1,18 +1,114 @@
 {
-  "pasien": [],
+  "pasien": [
+    {
+      "id": 1,
+      "no_rm": "RM-2026-0001",
+      "nama": "Dwi Insan Pinayungan Pinayungan",
+      "nik": "",
+      "no_bpjs": "",
+      "tanggal_lahir": "2026-09-10",
+      "jenis_kelamin": "L",
+      "alamat": "Jl Gresik Gadukan Utara, Morokrembangan, Surabaya",
+      "no_hp": "089612793783",
+      "created_at": "2026-09-13T05:49:02.970Z"
+    },
+    {
+      "id": 2,
+      "no_rm": "RM-2026-0002",
+      "nama": "Dwi Insan Pinayungan Pinayungan",
+      "nik": "",
+      "no_bpjs": "",
+      "tanggal_lahir": "2026-09-17",
+      "jenis_kelamin": "L",
+      "alamat": "Jl Gresik Gadukan Utara, Morokrembangan, Surabaya",
+      "no_hp": "089612793783",
+      "created_at": "2026-09-13T05:49:26.252Z"
+    }
+  ],
   "poli": [
-    { "id": 1, "nama_poli": "Poli Umum" },
-    { "id": 2, "nama_poli": "Poli Gigi" },
-    { "id": 3, "nama_poli": "Poli KIA & Anak" },
-    { "id": 4, "nama_poli": "Poli Penyakit Dalam" },
-    { "id": 5, "nama_poli": "Poli Kebidanan & Kandungan" }
+    {
+      "id": 1,
+      "nama_poli": "Poli Umum"
+    },
+    {
+      "id": 2,
+      "nama_poli": "Poli Gigi"
+    },
+    {
+      "id": 3,
+      "nama_poli": "Poli KIA & Anak"
+    },
+    {
+      "id": 4,
+      "nama_poli": "Poli Penyakit Dalam"
+    },
+    {
+      "id": 5,
+      "nama_poli": "Poli Kebidanan & Kandungan"
+    }
   ],
   "dokter": [
-    { "id": 1, "nama_dokter": "dr. Ahmad Hidayat", "spesialisasi": "Dokter Umum", "poli_id": 1 },
-    { "id": 2, "nama_dokter": "dr. Siti Rahmawati", "spesialisasi": "Dokter Gigi", "poli_id": 2 },
-    { "id": 3, "nama_dokter": "dr. Budi Santoso, Sp.A", "spesialisasi": "Spesialis Anak", "poli_id": 3 },
-    { "id": 4, "nama_dokter": "dr. Hendra Wijaya, Sp.PD", "spesialisasi": "Spesialis Penyakit Dalam", "poli_id": 4 },
-    { "id": 5, "nama_dokter": "dr. Dewi Lestari, Sp.OG", "spesialisasi": "Spesialis Kebidanan", "poli_id": 5 }
+    {
+      "id": 1,
+      "nama_dokter": "dr. Ahmad Hidayat",
+      "spesialisasi": "Dokter Umum",
+      "poli_id": 1
+    },
+    {
+      "id": 2,
+      "nama_dokter": "dr. Siti Rahmawati",
+      "spesialisasi": "Dokter Gigi",
+      "poli_id": 2
+    },
+    {
+      "id": 3,
+      "nama_dokter": "dr. Budi Santoso, Sp.A",
+      "spesialisasi": "Spesialis Anak",
+      "poli_id": 3
+    },
+    {
+      "id": 4,
+      "nama_dokter": "dr. Hendra Wijaya, Sp.PD",
+      "spesialisasi": "Spesialis Penyakit Dalam",
+      "poli_id": 4
+    },
+    {
+      "id": 5,
+      "nama_dokter": "dr. Dewi Lestari, Sp.OG",
+      "spesialisasi": "Spesialis Kebidanan",
+      "poli_id": 5
+    }
   ],
-  "kunjungan": []
+  "kunjungan": [
+    {
+      "id": 1,
+      "no_registrasi": "REG-20260913-001",
+      "tanggal_kunjungan": "2026-09-13",
+      "waktu_kunjungan": "12:48",
+      "pasien_id": 1,
+      "status_pasien": "Baru",
+      "poli_id": 1,
+      "dokter_id": 1,
+      "penjamin": "BPJS/JKN",
+      "no_kartu_penjamin": "",
+      "tindakan": "Pemeriksaan Medis & Konsultasi",
+      "catatan": "",
+      "created_at": "2026-09-13T05:49:03.003Z"
+    },
+    {
+      "id": 2,
+      "no_registrasi": "REG-20260810-001",
+      "tanggal_kunjungan": "2026-08-10",
+      "waktu_kunjungan": "12:49",
+      "pasien_id": 2,
+      "status_pasien": "Baru",
+      "poli_id": 1,
+      "dokter_id": 1,
+      "penjamin": "Umum",
+      "no_kartu_penjamin": "",
+      "tindakan": "Pemeriksaan Medis & Konsultasi",
+      "catatan": "",
+      "created_at": "2026-09-13T05:49:26.311Z"
+    }
+  ]
 }
