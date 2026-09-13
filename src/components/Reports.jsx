@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FileBarChart, FileSpreadsheet, FileText, Filter } from 'lucide-react';
+import { FileBarChart, FileSpreadsheet, FileText, Filter, Calendar, Sparkles } from 'lucide-react';
 import { exportToExcel, exportToPDF } from '../utils/exportUtils';
 
 export default function Reports() {
@@ -66,6 +66,7 @@ export default function Reports() {
   const handleExportExcel = () => {
     if (!detail || detail.length === 0) {
       alert('Tidak ada data kunjungan untuk periode filter ini.');
+      return;
     }
     exportToExcel(detail, summary, filterInfo);
   };
@@ -73,6 +74,7 @@ export default function Reports() {
   const handleExportPDF = () => {
     if (!detail || detail.length === 0) {
       alert('Tidak ada data kunjungan untuk periode filter ini.');
+      return;
     }
     exportToPDF(detail, summary, filterInfo);
   };
@@ -81,62 +83,68 @@ export default function Reports() {
     <div className="space-y-6">
       
       {/* Header & Export Actions */}
-      <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-xl font-bold text-slate-800 flex items-center space-x-2">
-            <FileBarChart className="w-6 h-6 text-sky-600" />
-            <span>Rekapitulasi & Pelaporan Kunjungan Pasien</span>
-          </h2>
-          <p className="text-xs text-slate-500 mt-1">
-            Klinik Utama Jati Asih Medika &bull; Memenuhi REQ-05, REQ-06, REQ-07, REQ-08, dan REQ-09.
-          </p>
+      <div className="bg-white p-6 rounded-3xl border border-sky-100 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-5">
+        <div className="flex items-center space-x-3">
+          <div className="w-12 h-12 rounded-2xl bg-sky-50 text-sky-600 border border-sky-100 flex items-center justify-center shrink-0">
+            <FileBarChart className="w-6 h-6" />
+          </div>
+          <div>
+            <h2 className="text-xl font-extrabold text-slate-800 tracking-tight">
+              Rekapitulasi & Laporan Kunjungan
+            </h2>
+            <p className="text-xs text-sky-600 font-medium mt-0.5">
+              Laporan rekapitulasi data berdasarkan periode, penjamin, gender, dan usia.
+            </p>
+          </div>
         </div>
 
         {/* Export Buttons (REQ-09) */}
-        <div className="flex items-center space-x-2 shrink-0">
+        <div className="flex items-center space-x-2.5 shrink-0">
           <button
             type="button"
             onClick={handleExportExcel}
-            className="px-4 py-2.5 bg-emerald-600 text-white font-bold rounded-xl text-xs hover:bg-emerald-700 active:scale-95 transition flex items-center space-x-2 shadow-sm cursor-pointer"
+            className="px-4 py-2.5 bg-emerald-600 text-white font-extrabold rounded-xl text-xs hover:bg-emerald-700 active:scale-95 transition-all flex items-center space-x-2 shadow-md shadow-emerald-600/15 cursor-pointer"
           >
             <FileSpreadsheet className="w-4 h-4" />
-            <span>Export Excel (REQ-09)</span>
+            <span>Export Excel</span>
           </button>
 
           <button
             type="button"
             onClick={handleExportPDF}
-            className="px-4 py-2.5 bg-red-600 text-white font-bold rounded-xl text-xs hover:bg-red-700 active:scale-95 transition flex items-center space-x-2 shadow-sm cursor-pointer"
+            className="px-4 py-2.5 bg-rose-600 text-white font-extrabold rounded-xl text-xs hover:bg-rose-700 active:scale-95 transition-all flex items-center space-x-2 shadow-md shadow-rose-600/15 cursor-pointer"
           >
             <FileText className="w-4 h-4" />
-            <span>Export PDF (REQ-09)</span>
+            <span>Export PDF</span>
           </button>
         </div>
       </div>
 
       {/* Filter Control Bar (REQ-05 & REQ-06) */}
-      <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm space-y-4">
-        <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-          <h3 className="font-bold text-slate-800 text-sm flex items-center space-x-2">
-            <Filter className="w-4 h-4 text-sky-600" />
-            <span>Filter Laporan Rekapitulasi</span>
+      <div className="bg-white p-6 rounded-3xl border border-sky-100 shadow-sm space-y-4">
+        <div className="flex items-center justify-between border-b border-sky-100/70 pb-3.5">
+          <h3 className="font-extrabold text-slate-800 text-sm flex items-center space-x-2">
+            <div className="w-7 h-7 rounded-lg bg-sky-50 text-sky-600 flex items-center justify-center">
+              <Filter className="w-3.5 h-3.5" />
+            </div>
+            <span>Filter Tanggal & Penjamin</span>
           </h3>
           <div className="flex items-center space-x-2">
             <button
               onClick={setTodayFilter}
-              className="text-xs font-semibold text-sky-600 bg-sky-50 px-2.5 py-1 rounded-lg hover:bg-sky-100"
+              className="text-xs font-bold text-sky-700 bg-sky-50 px-3 py-1 rounded-xl border border-sky-100 hover:bg-sky-100 transition"
             >
               Hari Ini
             </button>
             <button
               onClick={setMonthFilter}
-              className="text-xs font-semibold text-sky-600 bg-sky-50 px-2.5 py-1 rounded-lg hover:bg-sky-100"
+              className="text-xs font-bold text-sky-700 bg-sky-50 px-3 py-1 rounded-xl border border-sky-100 hover:bg-sky-100 transition"
             >
               Bulan Ini
             </button>
             <button
               onClick={clearFilter}
-              className="text-xs text-slate-500 hover:text-slate-700 underline font-medium"
+              className="text-xs text-slate-500 hover:text-slate-800 underline font-semibold"
             >
               Reset Filter
             </button>
@@ -147,33 +155,33 @@ export default function Reports() {
           
           {/* Tanggal Awal */}
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">Periode Tanggal Awal (REQ-05)</label>
+            <label className="block text-xs font-bold text-slate-700 mb-1.5">Periode Tanggal Awal (REQ-05)</label>
             <input
               type="date"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
-              className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none"
+              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 outline-none transition-all"
             />
           </div>
 
           {/* Tanggal Akhir */}
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">Periode Tanggal Akhir (REQ-05)</label>
+            <label className="block text-xs font-bold text-slate-700 mb-1.5">Periode Tanggal Akhir (REQ-05)</label>
             <input
               type="date"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
-              className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none"
+              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 outline-none transition-all"
             />
           </div>
 
           {/* Filter Penjamin (REQ-06) */}
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">Filter Penjamin (REQ-06)</label>
+            <label className="block text-xs font-bold text-slate-700 mb-1.5">Filter Penjamin (REQ-06)</label>
             <select
               value={penjaminFilter}
               onChange={(e) => setPenjaminFilter(e.target.value)}
-              className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none"
+              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-800 focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 outline-none transition-all"
             >
               <option value="">Semua Penjamin (Umum & BPJS/JKN)</option>
               <option value="BPJS/JKN">BPJS / JKN Saja</option>
@@ -188,46 +196,46 @@ export default function Reports() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         
         {/* Total Kunjungan */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm">
-          <p className="text-xs font-semibold text-slate-500 uppercase">Total Kunjungan</p>
-          <h3 className="text-3xl font-extrabold text-slate-800 mt-1">{summary.totalKunjungan || 0}</h3>
-          <p className="text-xs text-slate-400 mt-1">Pasien Baru: {summary.statusCounts?.Baru || 0} &bull; Lama: {summary.statusCounts?.Lama || 0}</p>
+        <div className="bg-white p-5 rounded-3xl border border-sky-100 shadow-sm hover:shadow-md transition-all duration-200">
+          <p className="text-xs font-extrabold text-slate-400 uppercase tracking-wider">Total Kunjungan</p>
+          <h3 className="text-3xl font-black text-slate-800 mt-1 tracking-tight">{summary.totalKunjungan || 0}</h3>
+          <p className="text-xs text-sky-700 font-semibold mt-1">Pasien Baru: {summary.statusCounts?.Baru || 0} &bull; Lama: {summary.statusCounts?.Lama || 0}</p>
         </div>
 
         {/* Penjamin Breakdown */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm">
-          <p className="text-xs font-semibold text-slate-500 uppercase">Penjamin (REQ-06)</p>
+        <div className="bg-white p-5 rounded-3xl border border-sky-100 shadow-sm hover:shadow-md transition-all duration-200">
+          <p className="text-xs font-extrabold text-slate-400 uppercase tracking-wider">Penjamin (REQ-06)</p>
           <div className="flex justify-between items-baseline mt-1">
             <div>
-              <span className="text-2xl font-extrabold text-indigo-600">{summary.penjaminCounts?.['BPJS/JKN'] || 0}</span>
-              <span className="text-xs text-slate-500 block">BPJS / JKN</span>
+              <span className="text-2xl font-black text-indigo-600">{summary.penjaminCounts?.['BPJS/JKN'] || 0}</span>
+              <span className="text-xs font-bold text-slate-500 block">BPJS / JKN</span>
             </div>
             <div>
-              <span className="text-2xl font-extrabold text-emerald-600">{summary.penjaminCounts?.Umum || 0}</span>
-              <span className="text-xs text-slate-500 block">Umum</span>
+              <span className="text-2xl font-black text-emerald-600">{summary.penjaminCounts?.Umum || 0}</span>
+              <span className="text-xs font-bold text-slate-500 block">Umum</span>
             </div>
           </div>
         </div>
 
         {/* Gender Breakdown (REQ-07) */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm">
-          <p className="text-xs font-semibold text-slate-500 uppercase">Jenis Kelamin (REQ-07)</p>
+        <div className="bg-white p-5 rounded-3xl border border-sky-100 shadow-sm hover:shadow-md transition-all duration-200">
+          <p className="text-xs font-extrabold text-slate-400 uppercase tracking-wider">Gender (REQ-07)</p>
           <div className="flex justify-between items-baseline mt-1">
             <div>
-              <span className="text-2xl font-extrabold text-blue-600">{summary.genderCounts?.L || 0}</span>
-              <span className="text-xs text-slate-500 block">Laki-Laki (L)</span>
+              <span className="text-2xl font-black text-sky-600">{summary.genderCounts?.L || 0}</span>
+              <span className="text-xs font-bold text-slate-500 block">Laki-Laki (L)</span>
             </div>
             <div>
-              <span className="text-2xl font-extrabold text-pink-600">{summary.genderCounts?.P || 0}</span>
-              <span className="text-xs text-slate-500 block">Perempuan (P)</span>
+              <span className="text-2xl font-black text-rose-500">{summary.genderCounts?.P || 0}</span>
+              <span className="text-xs font-bold text-slate-500 block">Perempuan (P)</span>
             </div>
           </div>
         </div>
 
         {/* Rentang Usia (REQ-08) */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm">
-          <p className="text-xs font-semibold text-slate-500 uppercase">Kelompok Usia (REQ-08)</p>
-          <p className="text-xs text-slate-600 mt-2 font-medium">
+        <div className="bg-white p-5 rounded-3xl border border-sky-100 shadow-sm hover:shadow-md transition-all duration-200">
+          <p className="text-xs font-extrabold text-slate-400 uppercase tracking-wider">Kelompok Usia (REQ-08)</p>
+          <p className="text-xs text-slate-700 mt-2 font-bold">
             Dominan: {
               Object.entries(summary.ageGroupCounts || {})
                 .sort((a, b) => b[1] - a[1])[0]?.[0] || 'N/A'
@@ -239,67 +247,67 @@ export default function Reports() {
       </div>
 
       {/* Tabel Detail Rekapitulasi */}
-      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden space-y-3">
-        <div className="p-5 border-b border-slate-100 flex items-center justify-between">
-          <h3 className="font-bold text-slate-800 text-sm">Tabel Rincian Rekapitulasi Pasien</h3>
-          <span className="text-xs text-slate-400">Diurutkan berdasarkan tanggal kunjungan</span>
+      <div className="bg-white rounded-3xl border border-sky-100 shadow-sm overflow-hidden space-y-3">
+        <div className="p-5 border-b border-sky-100/70 flex items-center justify-between">
+          <h3 className="font-extrabold text-slate-800 text-sm">Tabel Rincian Rekapitulasi Kunjungan</h3>
+          <span className="text-xs text-sky-600 font-medium">Diurutkan berdasar tanggal terbaru</span>
         </div>
 
         {loading ? (
-          <div className="p-8 text-center text-slate-500">Memuat rekapitulasi...</div>
+          <div className="p-12 text-center text-sky-600 font-semibold animate-pulse">Memuat rekapitulasi...</div>
         ) : detail.length === 0 ? (
-          <div className="p-8 text-center text-slate-400">Tidak ada data untuk periode filter ini.</div>
+          <div className="p-12 text-center text-slate-400 font-medium">Tidak ada data untuk periode filter ini.</div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 border-b border-slate-200 text-slate-700 font-bold uppercase tracking-wider">
+              <thead className="bg-sky-50/80 border-b border-sky-100 text-sky-900 font-extrabold uppercase tracking-wider">
                 <tr>
-                  <th className="px-4 py-3">No</th>
-                  <th className="px-4 py-3">No. Reg / Tgl</th>
-                  <th className="px-4 py-3">No. RM</th>
-                  <th className="px-4 py-3">Nama Pasien</th>
-                  <th className="px-4 py-3">Status</th>
-                  <th className="px-4 py-3">Gender (REQ-07)</th>
-                  <th className="px-4 py-3">Usia & Kategori (REQ-08)</th>
-                  <th className="px-4 py-3">Poli / Dokter</th>
-                  <th className="px-4 py-3">Penjamin (REQ-06)</th>
-                  <th className="px-4 py-3">Tindakan Medis</th>
+                  <th className="px-4 py-4">No</th>
+                  <th className="px-4 py-4">No. Reg / Tgl</th>
+                  <th className="px-4 py-4">No. RM</th>
+                  <th className="px-4 py-4">Nama Pasien</th>
+                  <th className="px-4 py-4">Status</th>
+                  <th className="px-4 py-4">Gender (REQ-07)</th>
+                  <th className="px-4 py-4">Usia & Kategori (REQ-08)</th>
+                  <th className="px-4 py-4">Poli / Dokter</th>
+                  <th className="px-4 py-4">Penjamin (REQ-06)</th>
+                  <th className="px-4 py-4">Tindakan Medis</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-sky-50">
                 {detail.map((item, idx) => (
-                  <tr key={item.id} className="hover:bg-slate-50">
-                    <td className="px-4 py-3 font-semibold text-slate-400">{idx + 1}</td>
-                    <td className="px-4 py-3 font-mono">
+                  <tr key={item.id} className="hover:bg-sky-50/60 transition-colors duration-150">
+                    <td className="px-4 py-3.5 font-bold text-slate-400">{idx + 1}</td>
+                    <td className="px-4 py-3.5 font-mono">
                       <span className="font-bold text-slate-800">{item.no_registrasi}</span>
                       <p className="text-slate-400 text-[11px]">{item.tanggal_kunjungan}</p>
                     </td>
-                    <td className="px-4 py-3 font-mono font-semibold text-sky-700">{item.no_rm}</td>
-                    <td className="px-4 py-3 font-bold text-slate-800">{item.nama_pasien}</td>
-                    <td className="px-4 py-3">
-                      <span className={`px-2 py-0.5 rounded text-[11px] font-bold ${
-                        item.status_pasien === 'Baru' ? 'bg-sky-100 text-sky-800' : 'bg-indigo-100 text-indigo-800'
+                    <td className="px-4 py-3.5 font-mono font-bold text-sky-700">{item.no_rm}</td>
+                    <td className="px-4 py-3.5 font-extrabold text-slate-800">{item.nama_pasien}</td>
+                    <td className="px-4 py-3.5">
+                      <span className={`px-2.5 py-1 rounded-full text-[11px] font-extrabold ${
+                        item.status_pasien === 'Baru' ? 'bg-sky-100 text-sky-800 border border-sky-200' : 'bg-indigo-100 text-indigo-800 border border-indigo-200'
                       }`}>
                         {item.status_pasien}
                       </span>
                     </td>
-                    <td className="px-4 py-3 font-semibold">
-                      {item.jenis_kelamin === 'L' ? <span className="text-blue-600">Laki-Laki</span> : <span className="text-pink-600">Perempuan</span>}
+                    <td className="px-4 py-3.5 font-bold">
+                      {item.jenis_kelamin === 'L' ? <span className="text-sky-600">Laki-Laki</span> : <span className="text-rose-500">Perempuan</span>}
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-3.5">
                       <span className="font-bold text-slate-700">{item.usia} th</span>
                       <p className="text-slate-400 text-[11px]">{item.rentang_usia}</p>
                     </td>
-                    <td className="px-4 py-3">
-                      <span className="font-semibold text-slate-800">{item.nama_poli}</span>
+                    <td className="px-4 py-3.5">
+                      <span className="font-bold text-slate-800">{item.nama_poli}</span>
                       <p className="text-slate-400 text-[11px]">{item.nama_dokter}</p>
                     </td>
-                    <td className="px-4 py-3 font-bold">
+                    <td className="px-4 py-3.5 font-extrabold">
                       <span className={item.penjamin === 'BPJS/JKN' ? 'text-indigo-600' : 'text-emerald-600'}>
                         {item.penjamin}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-slate-600">{item.tindakan || '-'}</td>
+                    <td className="px-4 py-3.5 text-slate-600">{item.tindakan || '-'}</td>
                   </tr>
                 ))}
               </tbody>
@@ -311,3 +319,4 @@ export default function Reports() {
     </div>
   );
 }
+

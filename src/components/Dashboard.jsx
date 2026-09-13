@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Users, UserCheck, ShieldCheck, UserPlus, HeartPulse, PieChart as PieIcon, BarChart3 } from 'lucide-react';
+import { Users, UserCheck, ShieldCheck, UserPlus, HeartPulse, PieChart as PieIcon, BarChart3, ArrowRight, Sparkles } from 'lucide-react';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement } from 'chart.js';
 import { Bar, Pie, Doughnut } from 'react-chartjs-2';
 
@@ -29,8 +29,9 @@ export default function Dashboard({ setActiveTab }) {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-sky-600"></div>
+      <div className="flex flex-col items-center justify-center min-h-[400px] space-y-3">
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-sky-100 border-t-sky-600"></div>
+        <p className="text-sm font-semibold text-sky-700 animate-pulse">Memuat Data Rekapitulasi Klinik...</p>
       </div>
     );
   }
@@ -60,7 +61,7 @@ export default function Dashboard({ setActiveTab }) {
     labels: ['Laki-Laki (L)', 'Perempuan (P)'],
     datasets: [{
       data: [data.genderCounts?.L || 0, data.genderCounts?.P || 0],
-      backgroundColor: ['#3b82f6', '#ec4899'],
+      backgroundColor: ['#0284c7', '#f43f5e'],
       borderWidth: 0
     }]
   };
@@ -70,8 +71,8 @@ export default function Dashboard({ setActiveTab }) {
     datasets: [{
       label: 'Jumlah Pasien',
       data: Object.values(data.ageGroupCounts || {}),
-      backgroundColor: ['#f59e0b', '#10b981', '#06b6d4', '#3b82f6', '#8b5cf6'],
-      borderRadius: 6
+      backgroundColor: ['#f59e0b', '#10b981', '#06b6d4', '#0284c7', '#8b5cf6'],
+      borderRadius: 8
     }]
   };
 
@@ -81,29 +82,38 @@ export default function Dashboard({ setActiveTab }) {
       label: 'Jumlah Kunjungan',
       data: Object.values(data.poliCounts || {}),
       backgroundColor: '#0284c7',
-      borderRadius: 6
+      hoverBackgroundColor: '#0369a1',
+      borderRadius: 8
     }]
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-7">
       
       {/* Banner / Greeting */}
-      <div className="bg-gradient-to-r from-sky-800 via-sky-700 to-sky-600 rounded-2xl p-6 text-white shadow-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-extrabold tracking-tight">
-            Dashboard Rekapitulasi Kunjungan Pasien
+      <div className="bg-gradient-to-r from-sky-600 via-sky-500 to-blue-600 rounded-3xl p-7 text-white shadow-lg shadow-sky-500/15 relative overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+        <div className="absolute right-0 top-0 translate-x-12 -translate-y-12 w-64 h-64 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
+        
+        <div className="relative z-10 space-y-1.5">
+          <div className="inline-flex items-center space-x-2 bg-white/15 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold text-sky-50 border border-white/20">
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>Sistem Pendaftaran Pasien & Rekapitulasi</span>
+          </div>
+          <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+            Dashboard Rekapitulasi Klinik
           </h2>
-          <p className="text-sky-100 text-sm mt-1">
-            Klinik Utama Jati Asih Medika &bull; Pemantauan Real-Time Pasien Baru, Pasien Lama, Penjamin, & Demografi.
+          <p className="text-sky-100 text-sm max-w-xl leading-relaxed">
+            Pemantauan statistik real-time pendaftaran pasien, status riwayat kunjungan, penjamin, dan demografi Klinik Utama Jati Asih Medika.
           </p>
         </div>
+
         <button
           onClick={() => setActiveTab('pendaftaran')}
-          className="bg-white text-sky-800 font-semibold px-5 py-2.5 rounded-xl hover:bg-sky-50 transition-all duration-200 flex items-center space-x-2 shadow-sm shrink-0"
+          className="relative z-10 bg-white text-sky-700 font-bold px-5 py-3 rounded-2xl hover:bg-sky-50 transition-all duration-200 flex items-center space-x-2 shadow-md shadow-slate-900/10 hover:shadow-lg shrink-0 group active:scale-95"
         >
-          <UserPlus className="w-5 h-5 text-sky-600" />
-          <span>+ Daftar Kunjungan Pasien</span>
+          <UserPlus className="w-5 h-5 text-sky-600 group-hover:scale-110 transition-transform" />
+          <span>+ Pendaftaran Baru</span>
+          <ArrowRight className="w-4 h-4 text-sky-500 group-hover:translate-x-1 transition-transform" />
         </button>
       </div>
 
@@ -111,144 +121,150 @@ export default function Dashboard({ setActiveTab }) {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         
         {/* Total Kunjungan */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between">
+        <div className="bg-white p-5 rounded-2xl border border-sky-100 shadow-sm hover:shadow-md transition-all duration-200 flex items-center justify-between group">
           <div>
-            <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Kunjungan</p>
-            <h3 className="text-3xl font-extrabold text-slate-800 mt-1">{data.totalKunjungan}</h3>
-            <span className="text-xs text-sky-600 font-medium mt-1 inline-block">Keseluruhan Pasien</span>
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Kunjungan</p>
+            <h3 className="text-3xl font-black text-slate-800 mt-1 tracking-tight">{data.totalKunjungan}</h3>
+            <span className="text-xs text-sky-600 font-semibold mt-1 inline-block bg-sky-50 px-2 py-0.5 rounded-md">Semua Pasien</span>
           </div>
-          <div className="w-12 h-12 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center">
+          <div className="w-13 h-13 rounded-2xl bg-sky-50 text-sky-600 border border-sky-100 flex items-center justify-center group-hover:bg-sky-600 group-hover:text-white transition-colors duration-200 shrink-0">
             <Users className="w-6 h-6" />
           </div>
         </div>
 
         {/* Pasien Baru vs Lama */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between">
+        <div className="bg-white p-5 rounded-2xl border border-sky-100 shadow-sm hover:shadow-md transition-all duration-200 flex items-center justify-between group">
           <div>
-            <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Pasien Baru / Lama</p>
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Status Pasien</p>
             <div className="flex items-baseline space-x-2 mt-1">
-              <span className="text-2xl font-extrabold text-sky-600">{data.statusCounts?.Baru || 0}</span>
-              <span className="text-xs text-slate-400 font-normal">Baru</span>
+              <span className="text-2xl font-black text-sky-600">{data.statusCounts?.Baru || 0}</span>
+              <span className="text-xs text-slate-400 font-semibold">Baru</span>
               <span className="text-slate-300">/</span>
-              <span className="text-2xl font-extrabold text-sky-800">{data.statusCounts?.Lama || 0}</span>
-              <span className="text-xs text-slate-400 font-normal">Lama</span>
+              <span className="text-2xl font-black text-slate-700">{data.statusCounts?.Lama || 0}</span>
+              <span className="text-xs text-slate-400 font-semibold">Lama</span>
             </div>
-            <span className="text-xs text-slate-500 font-medium mt-1 inline-block">REQ-03 Status Riwayat</span>
+            <span className="text-xs text-sky-700 font-semibold mt-1 inline-block bg-sky-50 px-2 py-0.5 rounded-md">Status Riwayat</span>
           </div>
-          <div className="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center">
+          <div className="w-13 h-13 rounded-2xl bg-sky-50 text-sky-600 border border-sky-100 flex items-center justify-center group-hover:bg-sky-600 group-hover:text-white transition-colors duration-200 shrink-0">
             <UserCheck className="w-6 h-6" />
           </div>
         </div>
 
         {/* Penjamin BPJS vs Umum */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between">
+        <div className="bg-white p-5 rounded-2xl border border-sky-100 shadow-sm hover:shadow-md transition-all duration-200 flex items-center justify-between group">
           <div>
-            <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Penjamin BPJS / Umum</p>
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Penjamin Pasien</p>
             <div className="flex items-baseline space-x-2 mt-1">
-              <span className="text-2xl font-extrabold text-indigo-600">{data.penjaminCounts?.['BPJS/JKN'] || 0}</span>
-              <span className="text-xs text-slate-400 font-normal">BPJS</span>
+              <span className="text-2xl font-black text-indigo-600">{data.penjaminCounts?.['BPJS/JKN'] || 0}</span>
+              <span className="text-xs text-slate-400 font-semibold">BPJS</span>
               <span className="text-slate-300">/</span>
-              <span className="text-2xl font-extrabold text-emerald-600">{data.penjaminCounts?.Umum || 0}</span>
-              <span className="text-xs text-slate-400 font-normal">Umum</span>
+              <span className="text-2xl font-black text-emerald-600">{data.penjaminCounts?.Umum || 0}</span>
+              <span className="text-xs text-slate-400 font-semibold">Umum</span>
             </div>
-            <span className="text-xs text-slate-500 font-medium mt-1 inline-block">REQ-06 Filter Penjamin</span>
+            <span className="text-xs text-emerald-700 font-semibold mt-1 inline-block bg-emerald-50 px-2 py-0.5 rounded-md">Filter Penjamin</span>
           </div>
-          <div className="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center">
+          <div className="w-13 h-13 rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center group-hover:bg-emerald-600 group-hover:text-white transition-colors duration-200 shrink-0">
             <ShieldCheck className="w-6 h-6" />
           </div>
         </div>
 
         {/* Gender Laki / Perempuan */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between">
+        <div className="bg-white p-5 rounded-2xl border border-sky-100 shadow-sm hover:shadow-md transition-all duration-200 flex items-center justify-between group">
           <div>
-            <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Demografi Gender</p>
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Demografi Gender</p>
             <div className="flex items-baseline space-x-2 mt-1">
-              <span className="text-2xl font-extrabold text-blue-600">{data.genderCounts?.L || 0}</span>
-              <span className="text-xs text-slate-400 font-normal">L</span>
+              <span className="text-2xl font-black text-sky-600">{data.genderCounts?.L || 0}</span>
+              <span className="text-xs text-slate-400 font-semibold">L</span>
               <span className="text-slate-300">/</span>
-              <span className="text-2xl font-extrabold text-pink-500">{data.genderCounts?.P || 0}</span>
-              <span className="text-xs text-slate-400 font-normal">P</span>
+              <span className="text-2xl font-black text-rose-500">{data.genderCounts?.P || 0}</span>
+              <span className="text-xs text-slate-400 font-semibold">P</span>
             </div>
-            <span className="text-xs text-slate-500 font-medium mt-1 inline-block">REQ-07 Jenis Kelamin</span>
+            <span className="text-xs text-rose-700 font-semibold mt-1 inline-block bg-rose-50 px-2 py-0.5 rounded-md">Jenis Kelamin</span>
           </div>
-          <div className="w-12 h-12 rounded-xl bg-pink-100 text-pink-600 flex items-center justify-center">
+          <div className="w-13 h-13 rounded-2xl bg-rose-50 text-rose-500 border border-rose-100 flex items-center justify-center group-hover:bg-rose-500 group-hover:text-white transition-colors duration-200 shrink-0">
             <HeartPulse className="w-6 h-6" />
           </div>
         </div>
 
       </div>
 
-      {/* Visualisation Charts Section (REQ-10) */}
+      {/* Visualisation Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         {/* Doughnut: Pasien Baru vs Pasien Lama */}
-        <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
+        <div className="bg-white p-6 rounded-2xl border border-sky-100 shadow-sm flex flex-col justify-between hover:shadow-md transition-all duration-200">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-bold text-slate-800 text-base flex items-center space-x-2">
-              <PieIcon className="w-5 h-5 text-sky-600" />
-              <span>Pasien Baru vs Pasien Lama</span>
+            <h3 className="font-extrabold text-slate-800 text-base flex items-center space-x-2">
+              <div className="w-8 h-8 rounded-lg bg-sky-50 flex items-center justify-center text-sky-600">
+                <PieIcon className="w-4 h-4" />
+              </div>
+              <span>Pasien Baru vs Lama</span>
             </h3>
-            <span className="text-xs font-semibold bg-sky-50 text-sky-700 px-2.5 py-1 rounded-full">REQ-03</span>
+            <span className="text-xs font-bold bg-sky-50 text-sky-700 px-2.5 py-1 rounded-full border border-sky-100">REQ-03</span>
           </div>
           <div className="w-48 h-48 mx-auto my-2">
             <Doughnut data={statusChartData} options={{ maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }} />
           </div>
           <div className="mt-4 pt-4 border-t border-slate-100 text-xs text-slate-500 flex justify-around text-center">
-            <div>
-              <p className="font-bold text-sky-600 text-sm">{data.statusCounts?.Baru || 0}</p>
-              <p>Pasien Baru</p>
+            <div className="bg-sky-50/70 px-4 py-2 rounded-xl border border-sky-100/60 w-full mr-1.5">
+              <p className="font-black text-sky-600 text-base">{data.statusCounts?.Baru || 0}</p>
+              <p className="font-semibold text-slate-600 text-[11px]">Pasien Baru</p>
             </div>
-            <div>
-              <p className="font-bold text-sky-800 text-sm">{data.statusCounts?.Lama || 0}</p>
-              <p>Pasien Lama</p>
+            <div className="bg-sky-50/70 px-4 py-2 rounded-xl border border-sky-100/60 w-full ml-1.5">
+              <p className="font-black text-sky-800 text-base">{data.statusCounts?.Lama || 0}</p>
+              <p className="font-semibold text-slate-600 text-[11px]">Pasien Lama</p>
             </div>
           </div>
         </div>
 
         {/* Pie: Penjamin Umum vs BPJS/JKN */}
-        <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
+        <div className="bg-white p-6 rounded-2xl border border-sky-100 shadow-sm flex flex-col justify-between hover:shadow-md transition-all duration-200">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-bold text-slate-800 text-base flex items-center space-x-2">
-              <ShieldCheck className="w-5 h-5 text-emerald-600" />
+            <h3 className="font-extrabold text-slate-800 text-base flex items-center space-x-2">
+              <div className="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-600">
+                <ShieldCheck className="w-4 h-4" />
+              </div>
               <span>Distribusi Penjamin</span>
             </h3>
-            <span className="text-xs font-semibold bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-full">REQ-06</span>
+            <span className="text-xs font-bold bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-full border border-emerald-100">REQ-06</span>
           </div>
           <div className="w-48 h-48 mx-auto my-2">
             <Pie data={penjaminChartData} options={{ maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }} />
           </div>
           <div className="mt-4 pt-4 border-t border-slate-100 text-xs text-slate-500 flex justify-around text-center">
-            <div>
-              <p className="font-bold text-emerald-600 text-sm">{data.penjaminCounts?.Umum || 0}</p>
-              <p>Umum</p>
+            <div className="bg-emerald-50/70 px-4 py-2 rounded-xl border border-emerald-100/60 w-full mr-1.5">
+              <p className="font-black text-emerald-600 text-base">{data.penjaminCounts?.Umum || 0}</p>
+              <p className="font-semibold text-slate-600 text-[11px]">Umum</p>
             </div>
-            <div>
-              <p className="font-bold text-indigo-600 text-sm">{data.penjaminCounts?.['BPJS/JKN'] || 0}</p>
-              <p>BPJS / JKN</p>
+            <div className="bg-indigo-50/70 px-4 py-2 rounded-xl border border-indigo-100/60 w-full ml-1.5">
+              <p className="font-black text-indigo-600 text-base">{data.penjaminCounts?.['BPJS/JKN'] || 0}</p>
+              <p className="font-semibold text-slate-600 text-[11px]">BPJS / JKN</p>
             </div>
           </div>
         </div>
 
         {/* Doughnut: Gender L/P */}
-        <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
+        <div className="bg-white p-6 rounded-2xl border border-sky-100 shadow-sm flex flex-col justify-between hover:shadow-md transition-all duration-200">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-bold text-slate-800 text-base flex items-center space-x-2">
-              <HeartPulse className="w-5 h-5 text-pink-500" />
-              <span>Proporsi Jenis Kelamin</span>
+            <h3 className="font-extrabold text-slate-800 text-base flex items-center space-x-2">
+              <div className="w-8 h-8 rounded-lg bg-rose-50 flex items-center justify-center text-rose-500">
+                <HeartPulse className="w-4 h-4" />
+              </div>
+              <span>Jenis Kelamin</span>
             </h3>
-            <span className="text-xs font-semibold bg-pink-50 text-pink-700 px-2.5 py-1 rounded-full">REQ-07</span>
+            <span className="text-xs font-bold bg-rose-50 text-rose-700 px-2.5 py-1 rounded-full border border-rose-100">REQ-07</span>
           </div>
           <div className="w-48 h-48 mx-auto my-2">
             <Doughnut data={genderChartData} options={{ maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }} />
           </div>
           <div className="mt-4 pt-4 border-t border-slate-100 text-xs text-slate-500 flex justify-around text-center">
-            <div>
-              <p className="font-bold text-blue-600 text-sm">{data.genderCounts?.L || 0}</p>
-              <p>Laki-Laki</p>
+            <div className="bg-sky-50/70 px-4 py-2 rounded-xl border border-sky-100/60 w-full mr-1.5">
+              <p className="font-black text-sky-600 text-base">{data.genderCounts?.L || 0}</p>
+              <p className="font-semibold text-slate-600 text-[11px]">Laki-Laki</p>
             </div>
-            <div>
-              <p className="font-bold text-pink-600 text-sm">{data.genderCounts?.P || 0}</p>
-              <p>Perempuan</p>
+            <div className="bg-rose-50/70 px-4 py-2 rounded-xl border border-rose-100/60 w-full ml-1.5">
+              <p className="font-black text-rose-500 text-base">{data.genderCounts?.P || 0}</p>
+              <p className="font-semibold text-slate-600 text-[11px]">Perempuan</p>
             </div>
           </div>
         </div>
@@ -259,13 +275,15 @@ export default function Dashboard({ setActiveTab }) {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         
         {/* Bar Chart: Rentang Usia Pasien (REQ-08) */}
-        <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm">
+        <div className="bg-white p-6 rounded-2xl border border-sky-100 shadow-sm hover:shadow-md transition-all duration-200">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-bold text-slate-800 text-base flex items-center space-x-2">
-              <BarChart3 className="w-5 h-5 text-amber-500" />
-              <span>Rekapitulasi Kunjungan Berdasarkan Rentang Usia</span>
+            <h3 className="font-extrabold text-slate-800 text-base flex items-center space-x-2">
+              <div className="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center text-amber-600">
+                <BarChart3 className="w-4 h-4" />
+              </div>
+              <span>Rekapitulasi Berdasarkan Rentang Usia</span>
             </h3>
-            <span className="text-xs font-semibold bg-amber-50 text-amber-700 px-2.5 py-1 rounded-full">REQ-08</span>
+            <span className="text-xs font-bold bg-amber-50 text-amber-700 px-2.5 py-1 rounded-full border border-amber-100">REQ-08</span>
           </div>
           <div className="h-64">
             <Bar data={ageChartData} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } } }} />
@@ -273,13 +291,15 @@ export default function Dashboard({ setActiveTab }) {
         </div>
 
         {/* Bar Chart: Kunjungan per Poli / Pelayanan */}
-        <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm">
+        <div className="bg-white p-6 rounded-2xl border border-sky-100 shadow-sm hover:shadow-md transition-all duration-200">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-bold text-slate-800 text-base flex items-center space-x-2">
-              <BarChart3 className="w-5 h-5 text-sky-600" />
-              <span>Distribusi Kunjungan per Poli / Pelayanan</span>
+            <h3 className="font-extrabold text-slate-800 text-base flex items-center space-x-2">
+              <div className="w-8 h-8 rounded-lg bg-sky-50 flex items-center justify-center text-sky-600">
+                <BarChart3 className="w-4 h-4" />
+              </div>
+              <span>Kunjungan per Poli / Pelayanan</span>
             </h3>
-            <span className="text-xs font-semibold bg-sky-50 text-sky-700 px-2.5 py-1 rounded-full">REQ-02</span>
+            <span className="text-xs font-bold bg-sky-50 text-sky-700 px-2.5 py-1 rounded-full border border-sky-100">REQ-02</span>
           </div>
           <div className="h-64">
             <Bar data={poliChartData} options={{ maintainAspectRatio: false, plugins: { legend: { display: false } } }} />
@@ -291,3 +311,4 @@ export default function Dashboard({ setActiveTab }) {
     </div>
   );
 }
+

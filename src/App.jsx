@@ -10,12 +10,12 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-['Plus_Jakarta_Sans',sans-serif]">
+    <div className="min-h-screen text-slate-800 flex flex-col font-['Plus_Jakarta_Sans',sans-serif] selection:bg-sky-500 selection:text-white">
       {/* Top Header */}
       <Header activeTab={activeTab} setActiveTab={setActiveTab} />
 
       {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 transition-all duration-300">
         {activeTab === 'dashboard' && <Dashboard setActiveTab={setActiveTab} />}
         {activeTab === 'pendaftaran' && (
           <RegistrationForm onSuccess={() => setActiveTab('riwayat')} />
@@ -28,12 +28,16 @@ export default function App() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-white border-t border-slate-200 py-6 mt-12">
+      <footer className="bg-white/80 backdrop-blur-md border-t border-sky-100 py-6 mt-16 shadow-inner">
         <div className="max-w-7xl mx-auto px-4 text-center text-xs text-slate-500">
-          <p className="font-semibold text-slate-700">KLINIK UTAMA JATI ASIH MEDIKA &copy; {new Date().getFullYear()}</p>
-          <p className="mt-1">Sistem Input/Pendaftaran Pasien & Rekapitulasi Laporan (REQ-01 s/d REQ-10)</p>
+          <div className="flex items-center justify-center space-x-2 mb-1">
+            <span className="w-2 h-2 rounded-full bg-sky-500 inline-block animate-pulse"></span>
+            <p className="font-bold text-slate-700 text-sm tracking-wide">KLINIK UTAMA JATI ASIH MEDIKA</p>
+          </div>
+          <p className="text-slate-500">Sistem Informasi Pendaftaran Pasien & Rekapitulasi Laporan Kunjungan &copy; {new Date().getFullYear()}</p>
         </div>
       </footer>
     </div>
   );
 }
+
