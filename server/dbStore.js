@@ -1,11 +1,18 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import os from 'os';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const dbPath = path.resolve(__dirname, '../klinik_db.json');
+// On Vercel / Serverless, project files are read-only (/var/task). Write to /tmp/ instead.
+const isServerless = process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME || process.env.NOW_REGION;
+const seedDbPath = path.resolve(__dirname, '../klinik_db.json');
+const writableDbPath = isServerless ? path.join(os.tmpdir(), 'klinik_db.json') : seedDbPath;
+
+// In-memory fallback database for active session
+let inMemoryDb = null;
 
 // Initial seed data
 const initialData = {
@@ -153,18 +160,39 @@ const initialData = {
 };
 
 export async function readDb() {
+  if (inMemoryDb) {
+    return inMemoryDb;
+  }
+
+  // 1. Try reading from writableDbPath (/tmp/klinik_db.json on Vercel)
   try {
-    const data = await fs.readFile(dbPath, 'utf8');
-    return JSON.parse(data);
+    const data = await fs.readFile(writableDbPath, 'utf8');
+    inMemoryDb = JSON.parse(data);
+    return inMemoryDb;
   } catch (err) {
-    if (err.code === 'ENOENT') {
-      await writeDb(initialData);
-      return initialData;
-    }
-    throw err;
+    // If not found in /tmp, try seedDbPath
+  }
+
+  // 2. Try reading from seedDbPath (project root klinik_db.json)
+  try {
+    const data = await fs.readFile(seedDbPath, 'utf8');
+    inMemoryDb = JSON.parse(data);
+    return inMemoryDb;
+  } catch (err) {
+    // Fallback to embedded initialData
+    inMemoryDb = JSON.parse(JSON.stringify(initialData));
+    return inMemoryDb;
   }
 }
 
 export async function writeDb(data) {
-  await fs.writeFile(dbPath, JSON.stringify(data, null, 2), 'utf8');
+  inMemoryDb = data;
+
+  try {
+    await fs.writeFile(writableDbPath, JSON.stringify(data, null, 2), 'utf8');
+  } catch (err) {
+    // If write to file system fails on serverless, inMemoryDb still persists during lambda lifecycle
+    console.warn('Warning: Could not write to disk, using in-memory store:', err.message);
+  }
 }
+
