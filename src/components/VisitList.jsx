@@ -202,8 +202,8 @@ export default function VisitList() {
                       <p className="text-slate-500 font-mono text-[11px]">{v.no_rm}</p>
                     </td>
 
-                    <td className="px-4 py-3.5">
-                      <span className={`px-2.5 py-1 rounded-full font-bold text-[11px] ${
+                    <td className="px-4 py-3.5 whitespace-nowrap">
+                      <span className={`inline-flex items-center px-3 py-1 rounded-full font-extrabold text-[11px] whitespace-nowrap shadow-xs ${
                         v.status_pasien === 'Baru'
                           ? 'bg-sky-100 text-sky-800 border border-sky-200'
                           : 'bg-indigo-100 text-indigo-800 border border-indigo-200'
@@ -212,19 +212,19 @@ export default function VisitList() {
                       </span>
                     </td>
 
-                    <td className="px-4 py-3.5">
+                    <td className="px-4 py-3.5 whitespace-nowrap">
                       <span className="font-bold text-slate-700">{v.jenis_kelamin === 'L' ? 'Laki-Laki' : 'Perempuan'}</span>
                       <p className="text-slate-500 text-[11px]">{v.usia} th ({v.rentang_usia})</p>
                     </td>
 
-                    <td className="px-4 py-3.5">
+                    <td className="px-4 py-3.5 min-w-[140px]">
                       <span className="font-bold text-slate-800">{v.nama_poli}</span>
                       <p className="text-slate-500 text-[11px]">{v.nama_dokter}</p>
                     </td>
 
-                    <td className="px-4 py-3.5">
-                      <span className={`px-2.5 py-1 rounded-md text-[11px] font-extrabold ${
-                        v.penjamin === 'BPJS/JKN' ? 'bg-emerald-100 text-emerald-800 border border-emerald-200' : 'bg-slate-100 text-slate-700'
+                    <td className="px-4 py-3.5 whitespace-nowrap">
+                      <span className={`inline-flex items-center px-3 py-1 rounded-lg text-[11px] font-extrabold whitespace-nowrap ${
+                        v.penjamin === 'BPJS/JKN' ? 'bg-emerald-100 text-emerald-800 border border-emerald-200' : 'bg-slate-100 text-slate-700 border border-slate-200'
                       }`}>
                         {v.penjamin}
                       </span>

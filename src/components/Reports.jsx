@@ -283,27 +283,28 @@ export default function Reports() {
                       <p className="text-slate-400 text-[11px]">{item.tanggal_kunjungan}</p>
                     </td>
                     <td className="px-4 py-3.5 font-mono font-bold text-sky-700">{item.no_rm}</td>
-                    <td className="px-4 py-3.5 font-extrabold text-slate-800">{item.nama_pasien}</td>
-                    <td className="px-4 py-3.5">
-                      <span className={`px-2.5 py-1 rounded-full text-[11px] font-extrabold ${
+                    <td className="px-4 py-3.5 whitespace-nowrap">
+                      <span className={`inline-flex items-center px-3 py-1 rounded-full text-[11px] font-extrabold whitespace-nowrap shadow-xs ${
                         item.status_pasien === 'Baru' ? 'bg-sky-100 text-sky-800 border border-sky-200' : 'bg-indigo-100 text-indigo-800 border border-indigo-200'
                       }`}>
-                        {item.status_pasien}
+                        Pasien {item.status_pasien}
                       </span>
                     </td>
-                    <td className="px-4 py-3.5 font-bold">
+                    <td className="px-4 py-3.5 font-bold whitespace-nowrap">
                       {item.jenis_kelamin === 'L' ? <span className="text-sky-600">Laki-Laki</span> : <span className="text-rose-500">Perempuan</span>}
                     </td>
-                    <td className="px-4 py-3.5">
+                    <td className="px-4 py-3.5 whitespace-nowrap">
                       <span className="font-bold text-slate-700">{item.usia} th</span>
                       <p className="text-slate-400 text-[11px]">{item.rentang_usia}</p>
                     </td>
-                    <td className="px-4 py-3.5">
+                    <td className="px-4 py-3.5 min-w-[140px]">
                       <span className="font-bold text-slate-800">{item.nama_poli}</span>
                       <p className="text-slate-400 text-[11px]">{item.nama_dokter}</p>
                     </td>
-                    <td className="px-4 py-3.5 font-extrabold">
-                      <span className={item.penjamin === 'BPJS/JKN' ? 'text-indigo-600' : 'text-emerald-600'}>
+                    <td className="px-4 py-3.5 font-extrabold whitespace-nowrap">
+                      <span className={`inline-flex items-center px-3 py-1 rounded-lg text-[11px] font-extrabold whitespace-nowrap ${
+                        item.penjamin === 'BPJS/JKN' ? 'bg-emerald-100 text-emerald-800 border border-emerald-200' : 'bg-slate-100 text-slate-700 border border-slate-200'
+                      }`}>
                         {item.penjamin}
                       </span>
                     </td>
