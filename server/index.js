@@ -17,6 +17,22 @@ app.use(express.json());
 // Serve Static Production Frontend Build
 app.use(express.static(path.resolve(__dirname, '../dist')));
 
+// Lazy MySQL initialization for Vercel Serverless
+let mysqlInitialized = false;
+async function ensureMysql() {
+  if (!isMysqlConnected() && !mysqlInitialized) {
+    mysqlInitialized = true;
+    await initMysql();
+  }
+}
+
+app.use(async (req, res, next) => {
+  if (req.path.startsWith('/api')) {
+    await ensureMysql();
+  }
+  next();
+});
+
 // Unified Data Access Layer (MySQL + Fallback JSON)
 async function getDb() {
   if (isMysqlConnected()) {

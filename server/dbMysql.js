@@ -8,13 +8,13 @@ const __dirname = path.dirname(__filename);
 
 // Dynamic MySQL Configuration
 const MYSQL_CONFIG = {
-  host: process.env.MYSQL_HOST || 'localhost',
-  port: Number(process.env.MYSQL_PORT) || 3306,
-  user: process.env.MYSQL_USER || 'root',
-  password: process.env.MYSQL_PASSWORD || '',
+  host: process.env.MYSQL_HOST || process.env.MYSQL__HOST || 'localhost',
+  port: Number(process.env.MYSQL_PORT || process.env.MYSQL__PORT) || 3306,
+  user: process.env.MYSQL_USER || process.env.MYSQL__USER || 'root',
+  password: process.env.MYSQL_PASSWORD || process.env.MYSQL__PASSWORD || '',
 };
 
-const DB_NAME = process.env.MYSQL_DB || 'klinik_jati_asih_medika';
+const DB_NAME = process.env.MYSQL_DB || process.env.MYSQL__DB || 'klinik_jati_asih_medika';
 
 let pool = null;
 let isMysqlActive = false;
