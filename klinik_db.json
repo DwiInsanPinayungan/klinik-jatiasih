@@ -1,6 +1,18 @@
 {
   "pasien": [
     {
+      "id": 2,
+      "no_rm": "RM-2026-0002",
+      "nama": "as",
+      "nik": "",
+      "no_bpjs": "",
+      "tanggal_lahir": "2026-09-17",
+      "jenis_kelamin": "L",
+      "alamat": "Jl Gresik Gadukan Utara, Morokrembangan, Surabaya",
+      "no_hp": "089612793783",
+      "created_at": "2026-09-13T05:49:26.252Z"
+    },
+    {
       "id": 1,
       "no_rm": "RM-2026-0001",
       "nama": "Dwi Insan Pinayungan Pinayungan",
@@ -11,18 +23,6 @@
       "alamat": "Jl Gresik Gadukan Utara, Morokrembangan, Surabaya",
       "no_hp": "089612793783",
       "created_at": "2026-09-13T05:49:02.970Z"
-    },
-    {
-      "id": 2,
-      "no_rm": "RM-2026-0002",
-      "nama": "Dwi Insan Pinayungan Pinayungan",
-      "nik": "",
-      "no_bpjs": "",
-      "tanggal_lahir": "2026-09-17",
-      "jenis_kelamin": "L",
-      "alamat": "Jl Gresik Gadukan Utara, Morokrembangan, Surabaya",
-      "no_hp": "089612793783",
-      "created_at": "2026-09-13T05:49:26.252Z"
     }
   ],
   "poli": [

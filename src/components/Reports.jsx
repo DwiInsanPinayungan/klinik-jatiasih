@@ -142,12 +142,6 @@ export default function Reports() {
             >
               Bulan Ini
             </button>
-            <button
-              onClick={clearFilter}
-              className="text-xs text-slate-500 hover:text-slate-800 underline font-semibold"
-            >
-              Reset Filter
-            </button>
           </div>
         </div>
 

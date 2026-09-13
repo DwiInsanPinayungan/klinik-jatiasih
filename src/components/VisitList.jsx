@@ -6,6 +6,7 @@ export default function VisitList() {
   const [visits, setVisits] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [dateFilter, setDateFilter] = useState('');
   const [penjaminFilter, setPenjaminFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
 
@@ -21,11 +22,16 @@ export default function VisitList() {
   const fetchVisits = async () => {
     setLoading(true);
     try {
-      const query = new URLSearchParams({
+      const queryParams = {
         search,
         penjamin: penjaminFilter,
         status_pasien: statusFilter
-      }).toString();
+      };
+      if (dateFilter) {
+        queryParams.start_date = dateFilter;
+        queryParams.end_date = dateFilter;
+      }
+      const query = new URLSearchParams(queryParams).toString();
 
       const res = await fetch(`/api/kunjungan?${query}`);
       const data = await res.json();
@@ -56,7 +62,7 @@ export default function VisitList() {
       fetchVisits();
     });
     return () => unsubscribe();
-  }, [search, penjaminFilter, statusFilter]);
+  }, [search, penjaminFilter, statusFilter, dateFilter]);
 
   // Open Edit Modal (REQ-04)
   const handleEditClick = (visit) => {
@@ -141,7 +147,7 @@ export default function VisitList() {
         </div>
 
         {/* Filter Toolbar */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-1">
           <div className="relative">
             <Search className="w-4 h-4 text-sky-500 absolute left-3.5 top-3" />
             <input
@@ -150,6 +156,17 @@ export default function VisitList() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 outline-none transition-all"
+            />
+          </div>
+
+          <div className="relative">
+            <Calendar className="w-4 h-4 text-sky-500 absolute left-3.5 top-3 pointer-events-none" />
+            <input
+              type="date"
+              value={dateFilter}
+              onChange={(e) => setDateFilter(e.target.value)}
+              className="w-full pl-10 pr-3 py-2.5 rounded-xl border border-slate-200 text-xs font-medium focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 outline-none transition-all text-slate-700"
+              title="Filter Tanggal Kunjungan"
             />
           </div>
 
