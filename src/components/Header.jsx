@@ -1,18 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Activity, LayoutDashboard, UserPlus, ClipboardList, FileBarChart, Users, Database } from 'lucide-react';
+import React from 'react';
+import { Activity, LayoutDashboard, UserPlus, ClipboardList, FileBarChart, Users } from 'lucide-react';
 
 export default function Header({ activeTab, setActiveTab }) {
-  const [dbStatus, setDbStatus] = useState(null);
-
-  useEffect(() => {
-    fetch('/api/database-status')
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) setDbStatus(data);
-      })
-      .catch(() => {});
-  }, []);
-
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'pendaftaran', label: 'Pendaftaran', icon: UserPlus },
@@ -35,22 +24,9 @@ export default function Header({ activeTab, setActiveTab }) {
               <h1 className="text-base sm:text-lg font-black text-slate-800 tracking-tight leading-none group-hover:text-sky-700 transition-colors whitespace-nowrap">
                 KLINIK UTAMA JATI ASIH MEDIKA
               </h1>
-
-              <div className="flex items-center space-x-2 mt-1">
-                <p className="text-[11px] text-sky-600 font-bold tracking-wide whitespace-nowrap">
-                  Sistem Pendaftaran & Rekapitulasi Pasien
-                </p>
-                {dbStatus && (
-                  <span className={`hidden xl:inline-flex items-center space-x-1 px-2 py-0.5 rounded-full text-[9px] font-extrabold tracking-wide uppercase ${
-                    dbStatus.is_mysql
-                      ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                      : 'bg-sky-50 text-sky-700 border border-sky-200'
-                  }`}>
-                    <Database className="w-2.5 h-2.5" />
-                    <span>DB: {dbStatus.engine}</span>
-                  </span>
-                )}
-              </div>
+              <p className="text-[11px] text-sky-600 font-bold tracking-wide whitespace-nowrap mt-1">
+                Sistem Pendaftaran & Rekapitulasi Pasien
+              </p>
             </div>
           </div>
 
