@@ -101,14 +101,6 @@ export default function PatientMaster({ onSelectPasien }) {
                     <span>Tgl Lahir: <strong className="text-slate-800">{p.tanggal_lahir}</strong> ({getAge(p.tanggal_lahir)} th)</span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <Hash className="w-4 h-4 text-sky-500 shrink-0" />
-                    <span>NIK: <strong className="text-slate-800">{p.nik || '-'}</strong></span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <CreditCard className="w-4 h-4 text-sky-500 shrink-0" />
-                    <span>No. BPJS: <strong className="text-slate-800">{p.no_bpjs || '-'}</strong></span>
-                  </div>
-                  <div className="flex items-center space-x-2">
                     <Phone className="w-4 h-4 text-sky-500 shrink-0" />
                     <span>HP: <strong className="text-slate-800">{p.no_hp || '-'}</strong></span>
                   </div>
