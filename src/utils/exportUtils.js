@@ -117,11 +117,23 @@ export const exportToExcel = (data = [], summary = {}, filterInfo = {}) => {
   }
 };
 
+// Load Logo image as HTMLImageElement
+const loadLogoImage = () => {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.crossOrigin = 'Anonymous';
+    img.src = '/logo.png';
+    img.onload = () => resolve(img);
+    img.onerror = () => resolve(null);
+  });
+};
+
 // Export to PDF (.pdf) - Executive Dashboard PDF Layout
-export const exportToPDF = (data = [], summary = {}, filterInfo = {}) => {
+export const exportToPDF = async (data = [], summary = {}, filterInfo = {}) => {
   try {
     const doc = new jsPDF('landscape', 'mm', 'a4');
     const total = summary.totalKunjungan || 0;
+    const logoImg = await loadLogoImage();
 
     const runAutoTable = (config) => {
       if (typeof autoTable === 'function') {
@@ -131,36 +143,45 @@ export const exportToPDF = (data = [], summary = {}, filterInfo = {}) => {
       }
     };
 
+    // Center point for A4 Landscape (width 297mm)
+    const centerX = 148.5;
+
     // ==================== PAGE 1: EXECUTIVE DASHBOARD ====================
 
-    // Header Klinik
-    doc.setFont('Helvetica', 'bold');
-    doc.setFontSize(16);
-    doc.setTextColor(2, 132, 199); // Clinic primary blue
-    doc.text('KLINIK UTAMA JATI ASIH MEDIKA', 14, 15);
+    // Centered Logo & Header Klinik
+    let headerTextY = 15;
+    if (logoImg) {
+      doc.addImage(logoImg, 'PNG', centerX - 6, 7, 12, 12);
+      headerTextY = 24;
+    }
 
-    doc.setFontSize(10);
+    doc.setFont('Helvetica', 'bold');
+    doc.setFontSize(15);
+    doc.setTextColor(2, 132, 199); // Clinic primary blue
+    doc.text('KLINIK UTAMA JATI ASIH MEDIKA', centerX, headerTextY, { align: 'center' });
+
+    doc.setFontSize(9);
     doc.setFont('Helvetica', 'normal');
     doc.setTextColor(80, 80, 80);
-    doc.text('Jl. Jati Asih No. 88, Bekasi | Telp: (021) 8240-1234 | Email: info@jatiasihmedika.com', 14, 21);
+    doc.text('Jl. Jati Asih No. 88, Bekasi | Telp: (021) 8240-1234 | Email: info@jatiasihmedika.com', centerX, headerTextY + 5, { align: 'center' });
     doc.setLineWidth(0.5);
     doc.setDrawColor(2, 132, 199);
-    doc.line(14, 24, 283, 24);
+    doc.line(14, headerTextY + 8, 283, headerTextY + 8);
 
     // Judul & Subtitle
-    doc.setFontSize(13);
+    doc.setFontSize(12);
     doc.setFont('Helvetica', 'bold');
     doc.setTextColor(15, 23, 42);
-    doc.text('DASHBOARD EXECUTIVE REKAPITULASI KUNJUNGAN PASIEN', 14, 31);
+    doc.text('DASHBOARD EXECUTIVE REKAPITULASI KUNJUNGAN PASIEN', centerX, headerTextY + 14, { align: 'center' });
 
     doc.setFontSize(9);
     doc.setFont('Helvetica', 'normal');
     doc.setTextColor(100, 116, 139);
-    doc.text(`Periode: ${filterInfo.periode || 'Semua Periode'}  |  Penjamin: ${filterInfo.penjamin || 'Semua Penjamin'}  |  Tanggal Cetak: ${new Date().toLocaleDateString('id-ID')}`, 14, 36);
+    doc.text(`Periode: ${filterInfo.periode || 'Semua Periode'}  |  Penjamin: ${filterInfo.penjamin || 'Semua Penjamin'}  |  Tanggal Cetak: ${new Date().toLocaleDateString('id-ID')}`, centerX, headerTextY + 19, { align: 'center' });
 
     // KPI Summary Cards (4 Cards across top)
-    const cardY = 41;
-    const cardHeight = 22;
+    const cardY = headerTextY + 24;
+    const cardHeight = 20;
     const cardWidth = 63;
     const gap = 5.5;
 
@@ -171,12 +192,12 @@ export const exportToPDF = (data = [], summary = {}, filterInfo = {}) => {
     doc.setFont('Helvetica', 'bold');
     doc.setFontSize(8);
     doc.setTextColor(3, 105, 161);
-    doc.text('TOTAL KUNJUNGAN PASIEN', 18, cardY + 6);
-    doc.setFontSize(14);
-    doc.text(`${total}`, 18, cardY + 14);
+    doc.text('TOTAL KUNJUNGAN PASIEN', 18, cardY + 5);
+    doc.setFontSize(13);
+    doc.text(`${total}`, 18, cardY + 12);
     doc.setFontSize(7);
     doc.setFont('Helvetica', 'normal');
-    doc.text('Keseluruhan Pasien Terdaftar', 18, cardY + 19);
+    doc.text('Keseluruhan Pasien Terdaftar', 18, cardY + 17);
 
     // Card 2: Status Pasien (REQ-03)
     doc.setFillColor(238, 242, 255);
@@ -185,12 +206,12 @@ export const exportToPDF = (data = [], summary = {}, filterInfo = {}) => {
     doc.setFont('Helvetica', 'bold');
     doc.setFontSize(8);
     doc.setTextColor(67, 56, 202);
-    doc.text('STATUS PASIEN (REQ-03)', 18 + cardWidth + gap, cardY + 6);
-    doc.setFontSize(11);
-    doc.text(`Baru: ${summary.statusCounts?.Baru || 0}   |   Lama: ${summary.statusCounts?.Lama || 0}`, 18 + cardWidth + gap, cardY + 14);
+    doc.text('STATUS PASIEN (REQ-03)', 18 + cardWidth + gap, cardY + 5);
+    doc.setFontSize(10);
+    doc.text(`Baru: ${summary.statusCounts?.Baru || 0}   |   Lama: ${summary.statusCounts?.Lama || 0}`, 18 + cardWidth + gap, cardY + 12);
     doc.setFontSize(7);
     doc.setFont('Helvetica', 'normal');
-    doc.text(`Proporsi: ${getPercent(summary.statusCounts?.Baru || 0, total)} Baru`, 18 + cardWidth + gap, cardY + 19);
+    doc.text(`Proporsi: ${getPercent(summary.statusCounts?.Baru || 0, total)} Baru`, 18 + cardWidth + gap, cardY + 17);
 
     // Card 3: Penjamin (REQ-06)
     doc.setFillColor(236, 253, 245);
@@ -199,12 +220,12 @@ export const exportToPDF = (data = [], summary = {}, filterInfo = {}) => {
     doc.setFont('Helvetica', 'bold');
     doc.setFontSize(8);
     doc.setTextColor(4, 120, 87);
-    doc.text('PENJAMIN PASIEN (REQ-06)', 18 + (cardWidth + gap) * 2, cardY + 6);
-    doc.setFontSize(11);
-    doc.text(`BPJS: ${summary.penjaminCounts?.['BPJS/JKN'] || 0}   |   Umum: ${summary.penjaminCounts?.Umum || 0}`, 18 + (cardWidth + gap) * 2, cardY + 14);
+    doc.text('PENJAMIN PASIEN (REQ-06)', 18 + (cardWidth + gap) * 2, cardY + 5);
+    doc.setFontSize(10);
+    doc.text(`BPJS: ${summary.penjaminCounts?.['BPJS/JKN'] || 0}   |   Umum: ${summary.penjaminCounts?.Umum || 0}`, 18 + (cardWidth + gap) * 2, cardY + 12);
     doc.setFontSize(7);
     doc.setFont('Helvetica', 'normal');
-    doc.text(`BPJS / JKN: ${getPercent(summary.penjaminCounts?.['BPJS/JKN'] || 0, total)}`, 18 + (cardWidth + gap) * 2, cardY + 19);
+    doc.text(`BPJS / JKN: ${getPercent(summary.penjaminCounts?.['BPJS/JKN'] || 0, total)}`, 18 + (cardWidth + gap) * 2, cardY + 17);
 
     // Card 4: Demografi Gender (REQ-07)
     doc.setFillColor(253, 242, 248);
@@ -213,14 +234,15 @@ export const exportToPDF = (data = [], summary = {}, filterInfo = {}) => {
     doc.setFont('Helvetica', 'bold');
     doc.setFontSize(8);
     doc.setTextColor(190, 24, 93);
-    doc.text('DEMOGRAFI GENDER (REQ-07)', 18 + (cardWidth + gap) * 3, cardY + 6);
-    doc.setFontSize(11);
-    doc.text(`Laki: ${summary.genderCounts?.L || 0}   |   Perempuan: ${summary.genderCounts?.P || 0}`, 18 + (cardWidth + gap) * 3, cardY + 14);
+    doc.text('DEMOGRAFI GENDER (REQ-07)', 18 + (cardWidth + gap) * 3, cardY + 5);
+    doc.setFontSize(10);
+    doc.text(`Laki: ${summary.genderCounts?.L || 0}   |   Perempuan: ${summary.genderCounts?.P || 0}`, 18 + (cardWidth + gap) * 3, cardY + 12);
     doc.setFontSize(7);
     doc.setFont('Helvetica', 'normal');
-    doc.text(`L: ${getPercent(summary.genderCounts?.L || 0, total)}  |  P: ${getPercent(summary.genderCounts?.P || 0, total)}`, 18 + (cardWidth + gap) * 3, cardY + 19);
+    doc.text(`L: ${getPercent(summary.genderCounts?.L || 0, total)}  |  P: ${getPercent(summary.genderCounts?.P || 0, total)}`, 18 + (cardWidth + gap) * 3, cardY + 17);
 
     // TABLE 1: REKAPITULASI PENJAMIN & DEMOGRAFI GENDER (Left Side Page 1)
+    const tableStartY = cardY + 25;
     const penjaminGenderData = [
       ['Pasien Baru (REQ-01)', summary.statusCounts?.Baru || 0, getPercent(summary.statusCounts?.Baru || 0, total)],
       ['Pasien Lama (REQ-03)', summary.statusCounts?.Lama || 0, getPercent(summary.statusCounts?.Lama || 0, total)],
@@ -231,7 +253,7 @@ export const exportToPDF = (data = [], summary = {}, filterInfo = {}) => {
     ];
 
     runAutoTable({
-      startY: 68,
+      startY: tableStartY,
       margin: { left: 14, right: 153 },
       head: [['Kategori Penjamin & Demografi', 'Jumlah', '% Persentase']],
       body: penjaminGenderData,
@@ -250,7 +272,7 @@ export const exportToPDF = (data = [], summary = {}, filterInfo = {}) => {
     ];
 
     runAutoTable({
-      startY: 68,
+      startY: tableStartY,
       margin: { left: 153, right: 14 },
       head: [['Kelompok Rentang Usia (REQ-08)', 'Jumlah', '% Persentase']],
       body: ageGroupData,
@@ -267,7 +289,7 @@ export const exportToPDF = (data = [], summary = {}, filterInfo = {}) => {
     ]);
 
     runAutoTable({
-      startY: 125,
+      startY: tableStartY + 56,
       margin: { left: 14, right: 14 },
       head: [['Poli / Pelayanan Medis', 'Jumlah Kunjungan Pasien', 'Persentase Kunjungan']],
       body: poliData.length > 0 ? poliData : [['Tidak ada data poli', 0, '0%']],
@@ -280,27 +302,33 @@ export const exportToPDF = (data = [], summary = {}, filterInfo = {}) => {
     doc.setFontSize(8);
     doc.setFont('Helvetica', 'normal');
     doc.setTextColor(148, 163, 184);
-    doc.text('Klinik Utama Jati Asih Medika - Halaman 1 dari 2 (Dashboard Rekapitulasi)', 14, 202);
+    doc.text('Klinik Utama Jati Asih Medika - Halaman 1 dari 2 (Dashboard Rekapitulasi)', centerX, 202, { align: 'center' });
 
     // ==================== PAGE 2: TABEL DETAIL KUNJUNGAN PASIEN ====================
     doc.addPage('a4', 'landscape');
 
     // Header Page 2
+    let page2Y = 15;
+    if (logoImg) {
+      doc.addImage(logoImg, 'PNG', centerX - 5, 6, 10, 10);
+      page2Y = 21;
+    }
+
     doc.setFont('Helvetica', 'bold');
-    doc.setFontSize(14);
+    doc.setFontSize(13);
     doc.setTextColor(2, 132, 199);
-    doc.text('KLINIK UTAMA JATI ASIH MEDIKA', 14, 15);
+    doc.text('KLINIK UTAMA JATI ASIH MEDIKA', centerX, page2Y, { align: 'center' });
 
     doc.setFontSize(11);
     doc.setFont('Helvetica', 'bold');
     doc.setTextColor(15, 23, 42);
-    doc.text('RINCIAN TRANSAKSI KUNJUNGAN PASIEN', 14, 22);
+    doc.text('RINCIAN TRANSAKSI KUNJUNGAN PASIEN', centerX, page2Y + 6, { align: 'center' });
 
     doc.setFontSize(8);
     doc.setFont('Helvetica', 'normal');
     doc.setTextColor(100, 116, 139);
-    doc.text(`Periode: ${filterInfo.periode || 'Semua Periode'}  |  Total: ${data.length} Kunjungan Pasien`, 14, 27);
-    doc.line(14, 29, 283, 29);
+    doc.text(`Periode: ${filterInfo.periode || 'Semua Periode'}  |  Total: ${data.length} Kunjungan Pasien`, centerX, page2Y + 11, { align: 'center' });
+    doc.line(14, page2Y + 14, 283, page2Y + 14);
 
     // Tabel Detail Kunjungan
     const tableDetailData = data.map((item, idx) => [
@@ -320,7 +348,7 @@ export const exportToPDF = (data = [], summary = {}, filterInfo = {}) => {
     ]);
 
     runAutoTable({
-      startY: 32,
+      startY: page2Y + 17,
       margin: { left: 14, right: 14 },
       head: [['No', 'No Reg', 'Tanggal', 'No. RM', 'Nama Pasien', 'Status', 'JK', 'Usia', 'Kategori Usia', 'Poli', 'Dokter', 'Penjamin', 'Tindakan']],
       body: tableDetailData,
@@ -348,7 +376,7 @@ export const exportToPDF = (data = [], summary = {}, filterInfo = {}) => {
     doc.setFontSize(8);
     doc.setFont('Helvetica', 'normal');
     doc.setTextColor(148, 163, 184);
-    doc.text('Klinik Utama Jati Asih Medika - Halaman 2 dari 2 (Detail Kunjungan)', 14, 202);
+    doc.text('Klinik Utama Jati Asih Medika - Halaman 2 dari 2 (Detail Kunjungan)', centerX, 202, { align: 'center' });
 
     const filename = `Dashboard_Rekapitulasi_JatiAsihMedika_${new Date().toISOString().split('T')[0]}.pdf`;
     doc.save(filename);

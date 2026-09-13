@@ -71,12 +71,12 @@ export default function Reports() {
     exportToExcel(detail, summary, filterInfo);
   };
 
-  const handleExportPDF = () => {
+  const handleExportPDF = async () => {
     if (!detail || detail.length === 0) {
       alert('Tidak ada data kunjungan untuk periode filter ini.');
       return;
     }
-    exportToPDF(detail, summary, filterInfo);
+    await exportToPDF(detail, summary, filterInfo);
   };
 
   return (
