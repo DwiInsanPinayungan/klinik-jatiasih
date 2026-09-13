@@ -103,14 +103,14 @@ export default function PatientMaster({ onSelectPasien }) {
             <div key={p.id} className="bg-white p-6 rounded-3xl border border-sky-100 shadow-sm hover:shadow-md transition-all duration-200 space-y-3.5 flex flex-col justify-between group">
               
               <div className="space-y-3">
-                <div className="flex items-start justify-between border-b border-sky-100/70 pb-3">
-                  <div>
-                    <h3 className="font-extrabold text-slate-800 text-base group-hover:text-sky-700 transition-colors">{p.nama}</h3>
+                <div className="flex items-start justify-between border-b border-sky-100/70 pb-3 gap-2">
+                  <div className="min-w-0 flex-1">
+                    <h3 className="font-extrabold text-slate-800 text-base group-hover:text-sky-700 transition-colors leading-snug">{p.nama}</h3>
                     <span className="text-xs font-mono font-bold text-sky-700 bg-sky-50 px-2.5 py-0.5 rounded-md border border-sky-100 mt-1 inline-block">
                       {p.no_rm}
                     </span>
                   </div>
-                  <span className={`px-2.5 py-1 rounded-full text-[11px] font-extrabold ${
+                  <span className={`px-2.5 py-1 rounded-full text-[11px] font-extrabold whitespace-nowrap inline-flex items-center shrink-0 ${
                     p.jenis_kelamin === 'L' ? 'bg-sky-50 text-sky-700 border border-sky-200' : 'bg-rose-50 text-rose-600 border border-rose-200'
                   }`}>
                     {p.jenis_kelamin === 'L' ? 'Laki-Laki' : 'Perempuan'}
