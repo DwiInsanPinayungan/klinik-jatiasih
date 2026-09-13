@@ -187,7 +187,7 @@ export default function Reports() {
       </div>
 
       {/* Summary Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
         
         {/* Total Kunjungan */}
         <div className="bg-white p-5 rounded-3xl border border-sky-100 shadow-sm hover:shadow-md transition-all duration-200">
@@ -224,18 +224,6 @@ export default function Reports() {
               <span className="text-xs font-bold text-slate-500 block">Perempuan (P)</span>
             </div>
           </div>
-        </div>
-
-        {/* Rentang Usia (REQ-08) */}
-        <div className="bg-white p-5 rounded-3xl border border-sky-100 shadow-sm hover:shadow-md transition-all duration-200">
-          <p className="text-xs font-extrabold text-slate-400 uppercase tracking-wider">Kelompok Usia (REQ-08)</p>
-          <p className="text-xs text-slate-700 mt-2 font-bold">
-            Dominan: {
-              Object.entries(summary.ageGroupCounts || {})
-                .sort((a, b) => b[1] - a[1])[0]?.[0] || 'N/A'
-            }
-          </p>
-          <span className="text-[11px] text-sky-600 font-semibold mt-1 block">5 Kategori Usia Klinik</span>
         </div>
 
       </div>
