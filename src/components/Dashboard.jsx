@@ -96,14 +96,10 @@ export default function Dashboard({ setActiveTab }) {
     <div className="space-y-7">
       
       {/* Banner / Greeting */}
-      <div className="bg-gradient-to-r from-sky-600 via-sky-500 to-blue-600 rounded-3xl p-7 text-white shadow-lg shadow-sky-500/15 relative overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+      <div className="bg-gradient-to-r from-sky-600 via-sky-500 to-blue-600 rounded-3xl p-7 text-white shadow-lg shadow-sky-500/15 relative overflow-hidden">
         <div className="absolute right-0 top-0 translate-x-12 -translate-y-12 w-64 h-64 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
         
         <div className="relative z-10 space-y-1.5">
-          <div className="inline-flex items-center space-x-2 bg-white/15 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold text-sky-50 border border-white/20">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Sistem Pendaftaran Pasien & Rekapitulasi</span>
-          </div>
           <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
             Dashboard Rekapitulasi Klinik
           </h2>
@@ -111,15 +107,6 @@ export default function Dashboard({ setActiveTab }) {
             Pemantauan statistik real-time pendaftaran pasien, status riwayat kunjungan, penjamin, dan demografi Klinik Utama Jati Asih Medika.
           </p>
         </div>
-
-        <button
-          onClick={() => setActiveTab('pendaftaran')}
-          className="relative z-10 bg-white text-sky-700 font-bold px-5 py-3 rounded-2xl hover:bg-sky-50 transition-all duration-200 flex items-center space-x-2 shadow-md shadow-slate-900/10 hover:shadow-lg shrink-0 group active:scale-95"
-        >
-          <UserPlus className="w-5 h-5 text-sky-600 group-hover:scale-110 transition-transform" />
-          <span>+ Pendaftaran Baru</span>
-          <ArrowRight className="w-4 h-4 text-sky-500 group-hover:translate-x-1 transition-transform" />
-        </button>
       </div>
 
       {/* Summary Cards Grid */}
