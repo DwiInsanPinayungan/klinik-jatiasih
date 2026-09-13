@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Activity, LayoutDashboard, UserPlus, ClipboardList, FileBarChart, Users, Database, Cross } from 'lucide-react';
+import { Activity, LayoutDashboard, UserPlus, ClipboardList, FileBarChart, Users, Database } from 'lucide-react';
 
 export default function Header({ activeTab, setActiveTab }) {
   const [dbStatus, setDbStatus] = useState(null);
@@ -15,49 +15,47 @@ export default function Header({ activeTab, setActiveTab }) {
 
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { id: 'pendaftaran', label: 'Pendaftaran Kunjungan', icon: UserPlus },
+    { id: 'pendaftaran', label: 'Pendaftaran', icon: UserPlus },
     { id: 'riwayat', label: 'Data Kunjungan', icon: ClipboardList },
-    { id: 'laporan', label: 'Laporan & Rekapitulasi', icon: FileBarChart },
+    { id: 'laporan', label: 'Laporan & Rekap', icon: FileBarChart },
     { id: 'pasien', label: 'Master Pasien', icon: Users },
   ];
 
   return (
-    <header className="bg-white/90 backdrop-blur-md border-b border-sky-100 sticky top-0 z-30 shadow-sm transition-all duration-200">
+    <header className="bg-white/95 backdrop-blur-md border-b border-sky-100 sticky top-0 z-30 shadow-xs">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-20 gap-4">
           
           {/* Logo & Branding */}
-          <div className="flex items-center space-x-3.5 group cursor-pointer" onClick={() => setActiveTab('dashboard')}>
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-sky-600 via-sky-500 to-blue-400 flex items-center justify-center text-white shadow-md shadow-sky-500/25 ring-4 ring-sky-50 transition-all duration-300 group-hover:scale-105 group-hover:shadow-sky-500/40 shrink-0">
-              <Activity className="w-7 h-7 stroke-[2.5]" />
+          <div className="flex items-center space-x-3 group cursor-pointer shrink-0" onClick={() => setActiveTab('dashboard')}>
+            <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-sky-600 via-sky-500 to-blue-500 flex items-center justify-center text-white shadow-md shadow-sky-500/20 ring-4 ring-sky-50 transition-all duration-300 group-hover:scale-105 shrink-0">
+              <Activity className="w-6 h-6 stroke-[2.5]" />
             </div>
-            <div>
-              <div className="flex items-center space-x-2.5">
-                <h1 className="text-lg sm:text-xl font-extrabold text-slate-800 tracking-tight leading-tight group-hover:text-sky-700 transition-colors">
-                  KLINIK UTAMA JATI ASIH MEDIKA
-                </h1>
+            <div className="min-w-0">
+              <h1 className="text-base sm:text-lg font-black text-slate-800 tracking-tight leading-none group-hover:text-sky-700 transition-colors whitespace-nowrap">
+                KLINIK UTAMA JATI ASIH MEDIKA
+              </h1>
 
-                {/* Status Database Badge */}
+              <div className="flex items-center space-x-2 mt-1">
+                <p className="text-[11px] text-sky-600 font-bold tracking-wide whitespace-nowrap">
+                  Sistem Pendaftaran & Rekapitulasi Pasien
+                </p>
                 {dbStatus && (
-                  <span className={`hidden lg:inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wide uppercase shadow-xs ${
+                  <span className={`hidden xl:inline-flex items-center space-x-1 px-2 py-0.5 rounded-full text-[9px] font-extrabold tracking-wide uppercase ${
                     dbStatus.is_mysql
                       ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                       : 'bg-sky-50 text-sky-700 border border-sky-200'
                   }`}>
-                    <Database className="w-3 h-3" />
+                    <Database className="w-2.5 h-2.5" />
                     <span>DB: {dbStatus.engine}</span>
                   </span>
                 )}
               </div>
-              <p className="text-xs text-sky-600 font-semibold tracking-wide flex items-center space-x-1.5 mt-0.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-sky-500 inline-block"></span>
-                <span>Sistem Pendaftaran & Rekapitulasi Kunjungan Pasien</span>
-              </p>
             </div>
           </div>
 
           {/* Navigation Tabs */}
-          <nav className="hidden md:flex items-center space-x-1 bg-sky-50/70 p-1.5 rounded-2xl border border-sky-100/80 shadow-inner">
+          <nav className="hidden md:flex items-center space-x-1 bg-sky-50/80 p-1.5 rounded-2xl border border-sky-100/80 shrink-0">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = activeTab === item.id;
@@ -65,13 +63,13 @@ export default function Header({ activeTab, setActiveTab }) {
                 <button
                   key={item.id}
                   onClick={() => setActiveTab(item.id)}
-                  className={`flex items-center space-x-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${
+                  className={`flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs lg:text-sm font-bold whitespace-nowrap transition-all duration-200 ${
                     isActive
-                      ? 'bg-white text-sky-700 shadow-md shadow-sky-500/10 border border-sky-100 font-bold'
+                      ? 'bg-white text-sky-700 shadow-md shadow-sky-500/10 border border-sky-100 font-extrabold'
                       : 'text-slate-600 hover:text-sky-700 hover:bg-white/60'
                   }`}
                 >
-                  <Icon className={`w-4 h-4 transition-colors ${isActive ? 'text-sky-600' : 'text-slate-400'}`} />
+                  <Icon className={`w-4 h-4 shrink-0 transition-colors ${isActive ? 'text-sky-600' : 'text-slate-400'}`} />
                   <span>{item.label}</span>
                 </button>
               );
@@ -88,13 +86,13 @@ export default function Header({ activeTab, setActiveTab }) {
               <button
                 key={item.id}
                 onClick={() => setActiveTab(item.id)}
-                className={`flex items-center space-x-2 px-3 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
+                className={`flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
                   isActive
                     ? 'bg-sky-600 text-white shadow-md shadow-sky-600/20'
                     : 'bg-sky-50 text-slate-700 hover:bg-sky-100'
                 }`}
               >
-                <Icon className="w-4 h-4" />
+                <Icon className="w-4 h-4 shrink-0" />
                 <span>{item.label}</span>
               </button>
             );
@@ -104,4 +102,5 @@ export default function Header({ activeTab, setActiveTab }) {
     </header>
   );
 }
+
 
