@@ -7,14 +7,33 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Dynamic MySQL Configuration
-const MYSQL_CONFIG = {
+let MYSQL_CONFIG = {
   host: process.env.MYSQL_HOST || process.env.MYSQL__HOST || 'localhost',
   port: Number(process.env.MYSQL_PORT || process.env.MYSQL__PORT) || 3306,
   user: process.env.MYSQL_USER || process.env.MYSQL__USER || 'root',
   password: process.env.MYSQL_PASSWORD || process.env.MYSQL__PASSWORD || '',
 };
 
-const DB_NAME = process.env.MYSQL_DB || process.env.MYSQL__DB || 'klinik_jati_asih_medika';
+let DB_NAME = process.env.MYSQL_DB || process.env.MYSQL__DB || 'klinik_jati_asih_medika';
+
+// Support DATABASE_URL / MYSQL_URL if provided
+const connectionString = process.env.DATABASE_URL || process.env.MYSQL_URL;
+if (connectionString) {
+  try {
+    const parsed = new URL(connectionString);
+    MYSQL_CONFIG = {
+      host: parsed.hostname,
+      port: Number(parsed.port) || 3306,
+      user: parsed.username,
+      password: decodeURIComponent(parsed.password)
+    };
+    if (parsed.pathname && parsed.pathname.length > 1) {
+      DB_NAME = parsed.pathname.substring(1);
+    }
+  } catch (e) {
+    console.warn('Failed parsing connection URL:', e.message);
+  }
+}
 
 let pool = null;
 let isMysqlActive = false;
@@ -148,24 +167,40 @@ const initialSeed = {
 
 // Inisialisasi Koneksi & Skema MySQL
 export async function initMysql() {
-  try {
-    // Step 1: Connect tanpa database terlebih dahulu
-    const conn = await mysql.createConnection(MYSQL_CONFIG);
-    await conn.query(`CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\`;`);
-    await conn.end();
+  if (isMysqlActive && pool) return true;
 
-    // Step 2: Connection Pool ke Database Klinik
+  try {
+    // Attempt 1: Direct pool connection with target database
     pool = mysql.createPool({
       ...MYSQL_CONFIG,
       database: DB_NAME,
       waitForConnections: true,
       connectionLimit: 10,
-      queueLimit: 0
+      queueLimit: 0,
+      connectTimeout: 5000
     });
 
-    // Test query pool
-    await pool.query('SELECT 1');
-    isMysqlActive = true;
+    try {
+      await pool.query('SELECT 1');
+      isMysqlActive = true;
+    } catch (directErr) {
+      // If target database doesn't exist yet on localhost, try creating it
+      try {
+        const conn = await mysql.createConnection(MYSQL_CONFIG);
+        await conn.query(`CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\`;`);
+        await conn.end();
+
+        await pool.query('SELECT 1');
+        isMysqlActive = true;
+      } catch (createErr) {
+        isMysqlActive = false;
+        console.warn(`⚠️ MySQL Connection Warning: ${createErr.message}`);
+        return false;
+      }
+    }
+
+    if (!isMysqlActive) return false;
+
     console.log(`✅ Sukses terhubung ke Database MySQL: ${DB_NAME} (Host: ${MYSQL_CONFIG.host}:${MYSQL_CONFIG.port})`);
 
     // Step 3: Auto Create Tables

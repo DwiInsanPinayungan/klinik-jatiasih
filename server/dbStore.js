@@ -160,6 +160,9 @@ const initialData = {
 };
 
 export async function readDb() {
+  if (globalThis.__KLINIK_DB_STORE__) {
+    return globalThis.__KLINIK_DB_STORE__;
+  }
   if (inMemoryDb) {
     return inMemoryDb;
   }
@@ -168,6 +171,7 @@ export async function readDb() {
   try {
     const data = await fs.readFile(writableDbPath, 'utf8');
     inMemoryDb = JSON.parse(data);
+    globalThis.__KLINIK_DB_STORE__ = inMemoryDb;
     return inMemoryDb;
   } catch (err) {
     // If not found in /tmp, try seedDbPath
@@ -177,16 +181,19 @@ export async function readDb() {
   try {
     const data = await fs.readFile(seedDbPath, 'utf8');
     inMemoryDb = JSON.parse(data);
+    globalThis.__KLINIK_DB_STORE__ = inMemoryDb;
     return inMemoryDb;
   } catch (err) {
     // Fallback to embedded initialData
     inMemoryDb = JSON.parse(JSON.stringify(initialData));
+    globalThis.__KLINIK_DB_STORE__ = inMemoryDb;
     return inMemoryDb;
   }
 }
 
 export async function writeDb(data) {
   inMemoryDb = data;
+  globalThis.__KLINIK_DB_STORE__ = data;
 
   try {
     await fs.writeFile(writableDbPath, JSON.stringify(data, null, 2), 'utf8');
