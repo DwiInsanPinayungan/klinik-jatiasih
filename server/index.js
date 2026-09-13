@@ -101,6 +101,49 @@ async function generateNoRegistrasi(db, tanggalKunjungan) {
   return `${prefix}${String(lastNum + 1).padStart(3, '0')}`;
 }
 
+// ==================== REAL-TIME ENGINE ====================
+let sseClients = [];
+let lastDataUpdateTimestamp = Date.now();
+
+function broadcastDataChange(action = 'MUTATION', data = {}) {
+  lastDataUpdateTimestamp = Date.now();
+  const payload = JSON.stringify({ type: 'DATA_CHANGED', action, data, timestamp: lastDataUpdateTimestamp });
+  sseClients.forEach(client => {
+    try {
+      client.res.write(`data: ${payload}\n\n`);
+    } catch (err) {
+      // Ignore write errors
+    }
+  });
+}
+
+app.get('/api/realtime/stream', (req, res) => {
+  res.writeHead(200, {
+    'Content-Type': 'text/event-stream',
+    'Cache-Control': 'no-cache, no-transform',
+    'Connection': 'keep-alive',
+    'X-Accel-Buffering': 'no'
+  });
+
+  const clientId = Date.now();
+  const newClient = { id: clientId, res };
+  sseClients.push(newClient);
+
+  res.write(`data: ${JSON.stringify({ type: 'CONNECTED', timestamp: Date.now() })}\n\n`);
+
+  req.on('close', () => {
+    sseClients = sseClients.filter(c => c.id !== clientId);
+  });
+});
+
+app.get('/api/realtime/status', (req, res) => {
+  res.json({
+    success: true,
+    lastUpdate: lastDataUpdateTimestamp,
+    activeClients: sseClients.length
+  });
+});
+
 // ==================== API STATUS DATABASE ====================
 
 app.get('/api/database-status', (req, res) => {
@@ -271,7 +314,7 @@ app.get('/api/kunjungan', async (req, res) => {
   }
 });
 
-// POST Tambah Kunjungan (REQ-02 & REQ-03 Pasien Baru vs Lama)
+// POST Tambah Kunjungan (REQ-02 & REQ-03 Pasien Baru dan Lama)
 app.post('/api/kunjungan', async (req, res) => {
   try {
     const { pasien_id, tanggal_kunjungan, waktu_kunjungan, poli_id, dokter_id, penjamin, no_kartu_penjamin, tindakan, catatan } = req.body;
@@ -332,6 +375,8 @@ app.post('/api/kunjungan', async (req, res) => {
       db.kunjungan.push(newKunjungan);
       await writeJsonDb(db);
     }
+
+    broadcastDataChange('CREATE_KUNJUNGAN', newKunjungan);
 
     res.status(201).json({
       success: true,
@@ -404,6 +449,8 @@ app.put('/api/kunjungan/:id', async (req, res) => {
       await writeJsonDb(db);
     }
 
+    broadcastDataChange('UPDATE_KUNJUNGAN', { id });
+
     res.json({ success: true, message: 'Data kunjungan berhasil diperbaiki.' });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
@@ -422,6 +469,8 @@ app.delete('/api/kunjungan/:id', async (req, res) => {
       db.kunjungan = db.kunjungan.filter(k => k.id !== id);
       await writeJsonDb(db);
     }
+
+    broadcastDataChange('DELETE_KUNJUNGAN', { id });
 
     res.json({ success: true, message: 'Data kunjungan berhasil dihapus.' });
   } catch (err) {

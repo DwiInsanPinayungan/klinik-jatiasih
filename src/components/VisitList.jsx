@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Edit3, Trash2, Calendar, UserCheck, ShieldCheck, Stethoscope, CheckCircle2, X, Filter } from 'lucide-react';
+import { realtime } from '../utils/realtime';
 
 export default function VisitList() {
   const [visits, setVisits] = useState([]);
@@ -51,6 +52,10 @@ export default function VisitList() {
 
   useEffect(() => {
     fetchVisits();
+    const unsubscribe = realtime.subscribe(() => {
+      fetchVisits();
+    });
+    return () => unsubscribe();
   }, [search, penjaminFilter, statusFilter]);
 
   // Open Edit Modal (REQ-04)
@@ -84,6 +89,7 @@ export default function VisitList() {
       if (data.success) {
         setEditingVisit(null);
         fetchVisits();
+        realtime.emitChange('UPDATE_KUNJUNGAN', { id: editingVisit.id });
       } else {
         alert(data.message);
       }
@@ -102,6 +108,7 @@ export default function VisitList() {
       const data = await res.json();
       if (data.success) {
         fetchVisits();
+        realtime.emitChange('DELETE_KUNJUNGAN', { id });
       }
     } catch (err) {
       alert('Gagal menghapus: ' + err.message);

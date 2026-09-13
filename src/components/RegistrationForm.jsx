@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { UserPlus, Search, UserCheck, CheckCircle2, AlertCircle, Calendar, Clock, Stethoscope, ShieldCheck, FileText, Hash, Sparkles, User } from 'lucide-react';
+import { UserPlus, Search, CheckCircle2, AlertCircle, Calendar, FileText, UserCheck, Shield, Sparkles } from 'lucide-react';
+import { realtime } from '../utils/realtime';
 
 export default function RegistrationForm({ onSuccess }) {
   const [isPasienBaru, setIsPasienBaru] = useState(true);
@@ -133,6 +134,8 @@ export default function RegistrationForm({ onSuccess }) {
       const visitData = await visitRes.json();
 
       if (visitData.success) {
+        realtime.emitChange('CREATE_KUNJUNGAN', visitData);
+
         setAlertMsg({
           type: 'success',
           text: `Pendaftaran berhasil! Registrasi No: ${visitData.no_registrasi} (${visitData.status_pasien === 'Baru' ? 'Pasien Baru' : 'Pasien Lama'}).`

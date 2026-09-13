@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Users, UserCheck, ShieldCheck, UserPlus, HeartPulse, PieChart as PieIcon, BarChart3, ArrowRight, Sparkles } from 'lucide-react';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement } from 'chart.js';
 import { Bar, Pie, Doughnut } from 'react-chartjs-2';
+import { realtime } from '../utils/realtime';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement);
 
@@ -25,6 +26,10 @@ export default function Dashboard({ setActiveTab }) {
 
   useEffect(() => {
     fetchDashboardData();
+    const unsubscribe = realtime.subscribe(() => {
+      fetchDashboardData();
+    });
+    return () => unsubscribe();
   }, []);
 
   if (loading) {
