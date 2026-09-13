@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { UserPlus, Search, CheckCircle2, AlertCircle, Calendar, FileText, UserCheck, Shield, Sparkles } from 'lucide-react';
+import { UserPlus, Search, CheckCircle2, AlertCircle, Calendar, Clock, Stethoscope, FileText, UserCheck, Shield, Sparkles } from 'lucide-react';
 import { realtime } from '../utils/realtime';
 
 export default function RegistrationForm({ onSuccess }) {
