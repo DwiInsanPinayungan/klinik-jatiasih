@@ -17,9 +17,11 @@ export default function Header({ activeTab, setActiveTab }) {
           
           {/* Logo & Branding */}
           <div className="flex items-center space-x-3 group cursor-pointer shrink-0" onClick={() => setActiveTab('dashboard')}>
-            <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-sky-600 via-sky-500 to-blue-500 flex items-center justify-center text-white shadow-md shadow-sky-500/20 ring-4 ring-sky-50 transition-all duration-300 group-hover:scale-105 shrink-0">
-              <Activity className="w-6 h-6 stroke-[2.5]" />
-            </div>
+            <img 
+              src="/logo.png" 
+              alt="Logo Klinik Utama Jati Asih Medika" 
+              className="w-12 h-12 rounded-full object-cover shadow-md ring-2 ring-sky-100 transition-all duration-300 group-hover:scale-105 shrink-0" 
+            />
             <div className="min-w-0">
               <h1 className="text-base sm:text-lg font-black text-slate-800 tracking-tight leading-none group-hover:text-sky-700 transition-colors whitespace-nowrap">
                 KLINIK UTAMA JATI ASIH MEDIKA
