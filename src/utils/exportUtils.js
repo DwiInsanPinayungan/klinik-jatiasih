@@ -148,39 +148,52 @@ export const exportToPDF = async (data = [], summary = {}, filterInfo = {}) => {
 
     // ==================== PAGE 1: EXECUTIVE DASHBOARD ====================
 
-    // Centered Logo & Header Klinik
-    let headerTextY = 15;
-    if (logoImg) {
-      doc.addImage(logoImg, 'PNG', centerX - 6, 7, 12, 12);
-      headerTextY = 24;
-    }
-
+    // Centered Header Block (Logo on the left of Title Text)
+    const titleText = 'KLINIK UTAMA JATI ASIH MEDIKA';
     doc.setFont('Helvetica', 'bold');
     doc.setFontSize(15);
-    doc.setTextColor(2, 132, 199); // Clinic primary blue
-    doc.text('KLINIK UTAMA JATI ASIH MEDIKA', centerX, headerTextY, { align: 'center' });
+    const titleWidth = doc.getTextWidth(titleText);
+    const logoWidth = 12;
+    const logoHeight = 12;
+    const logoGap = 3.5;
+
+    let textY = 17;
+    if (logoImg) {
+      const totalHeaderWidth = logoWidth + logoGap + titleWidth;
+      const startX = centerX - (totalHeaderWidth / 2);
+      
+      // Render Logo on the left of title
+      doc.addImage(logoImg, 'PNG', startX, 9.5, logoWidth, logoHeight);
+
+      // Render Title text next to logo
+      doc.setTextColor(2, 132, 199); // Clinic primary blue
+      doc.text(titleText, startX + logoWidth + logoGap, 18.5);
+    } else {
+      doc.setTextColor(2, 132, 199);
+      doc.text(titleText, centerX, textY, { align: 'center' });
+    }
 
     doc.setFontSize(9);
     doc.setFont('Helvetica', 'normal');
     doc.setTextColor(80, 80, 80);
-    doc.text('Jl. Jati Asih No. 88, Bekasi | Telp: (021) 8240-1234 | Email: info@jatiasihmedika.com', centerX, headerTextY + 5, { align: 'center' });
+    doc.text('Jl. Jati Asih No. 88, Bekasi | Telp: (021) 8240-1234 | Email: info@jatiasihmedika.com', centerX, 25, { align: 'center' });
     doc.setLineWidth(0.5);
     doc.setDrawColor(2, 132, 199);
-    doc.line(14, headerTextY + 8, 283, headerTextY + 8);
+    doc.line(14, 28, 283, 28);
 
     // Judul & Subtitle
     doc.setFontSize(12);
     doc.setFont('Helvetica', 'bold');
     doc.setTextColor(15, 23, 42);
-    doc.text('DASHBOARD EXECUTIVE REKAPITULASI KUNJUNGAN PASIEN', centerX, headerTextY + 14, { align: 'center' });
+    doc.text('DASHBOARD EXECUTIVE REKAPITULASI KUNJUNGAN PASIEN', centerX, 34, { align: 'center' });
 
     doc.setFontSize(9);
     doc.setFont('Helvetica', 'normal');
     doc.setTextColor(100, 116, 139);
-    doc.text(`Periode: ${filterInfo.periode || 'Semua Periode'}  |  Penjamin: ${filterInfo.penjamin || 'Semua Penjamin'}  |  Tanggal Cetak: ${new Date().toLocaleDateString('id-ID')}`, centerX, headerTextY + 19, { align: 'center' });
+    doc.text(`Periode: ${filterInfo.periode || 'Semua Periode'}  |  Penjamin: ${filterInfo.penjamin || 'Semua Penjamin'}  |  Tanggal Cetak: ${new Date().toLocaleDateString('id-ID')}`, centerX, 39, { align: 'center' });
 
     // KPI Summary Cards (4 Cards across top)
-    const cardY = headerTextY + 24;
+    const cardY = 44;
     const cardHeight = 20;
     const cardWidth = 63;
     const gap = 5.5;
@@ -242,7 +255,7 @@ export const exportToPDF = async (data = [], summary = {}, filterInfo = {}) => {
     doc.text(`L: ${getPercent(summary.genderCounts?.L || 0, total)}  |  P: ${getPercent(summary.genderCounts?.P || 0, total)}`, 18 + (cardWidth + gap) * 3, cardY + 17);
 
     // TABLE 1: REKAPITULASI PENJAMIN & DEMOGRAFI GENDER (Left Side Page 1)
-    const tableStartY = cardY + 25;
+    const tableStartY = cardY + 24;
     const penjaminGenderData = [
       ['Pasien Baru (REQ-01)', summary.statusCounts?.Baru || 0, getPercent(summary.statusCounts?.Baru || 0, total)],
       ['Pasien Lama (REQ-03)', summary.statusCounts?.Lama || 0, getPercent(summary.statusCounts?.Lama || 0, total)],
@@ -307,28 +320,37 @@ export const exportToPDF = async (data = [], summary = {}, filterInfo = {}) => {
     // ==================== PAGE 2: TABEL DETAIL KUNJUNGAN PASIEN ====================
     doc.addPage('a4', 'landscape');
 
-    // Header Page 2
-    let page2Y = 15;
-    if (logoImg) {
-      doc.addImage(logoImg, 'PNG', centerX - 5, 6, 10, 10);
-      page2Y = 21;
-    }
-
+    // Header Page 2 (Logo on the left of title)
     doc.setFont('Helvetica', 'bold');
     doc.setFontSize(13);
-    doc.setTextColor(2, 132, 199);
-    doc.text('KLINIK UTAMA JATI ASIH MEDIKA', centerX, page2Y, { align: 'center' });
+    const p2TitleText = 'KLINIK UTAMA JATI ASIH MEDIKA';
+    const p2TitleWidth = doc.getTextWidth(p2TitleText);
+    const p2LogoWidth = 10;
+    const p2LogoHeight = 10;
+    const p2LogoGap = 3;
+
+    if (logoImg) {
+      const p2TotalHeaderWidth = p2LogoWidth + p2LogoGap + p2TitleWidth;
+      const p2StartX = centerX - (p2TotalHeaderWidth / 2);
+
+      doc.addImage(logoImg, 'PNG', p2StartX, 9, p2LogoWidth, p2LogoHeight);
+      doc.setTextColor(2, 132, 199);
+      doc.text(p2TitleText, p2StartX + p2LogoWidth + p2LogoGap, 16.5);
+    } else {
+      doc.setTextColor(2, 132, 199);
+      doc.text(p2TitleText, centerX, 15, { align: 'center' });
+    }
 
     doc.setFontSize(11);
     doc.setFont('Helvetica', 'bold');
     doc.setTextColor(15, 23, 42);
-    doc.text('RINCIAN TRANSAKSI KUNJUNGAN PASIEN', centerX, page2Y + 6, { align: 'center' });
+    doc.text('RINCIAN TRANSAKSI KUNJUNGAN PASIEN', centerX, 23, { align: 'center' });
 
     doc.setFontSize(8);
     doc.setFont('Helvetica', 'normal');
     doc.setTextColor(100, 116, 139);
-    doc.text(`Periode: ${filterInfo.periode || 'Semua Periode'}  |  Total: ${data.length} Kunjungan Pasien`, centerX, page2Y + 11, { align: 'center' });
-    doc.line(14, page2Y + 14, 283, page2Y + 14);
+    doc.text(`Periode: ${filterInfo.periode || 'Semua Periode'}  |  Total: ${data.length} Kunjungan Pasien`, centerX, 28, { align: 'center' });
+    doc.line(14, 31, 283, 31);
 
     // Tabel Detail Kunjungan
     const tableDetailData = data.map((item, idx) => [
@@ -348,7 +370,7 @@ export const exportToPDF = async (data = [], summary = {}, filterInfo = {}) => {
     ]);
 
     runAutoTable({
-      startY: page2Y + 17,
+      startY: 34,
       margin: { left: 14, right: 14 },
       head: [['No', 'No Reg', 'Tanggal', 'No. RM', 'Nama Pasien', 'Status', 'JK', 'Usia', 'Kategori Usia', 'Poli', 'Dokter', 'Penjamin', 'Tindakan']],
       body: tableDetailData,
