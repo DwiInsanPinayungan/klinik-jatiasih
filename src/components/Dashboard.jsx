@@ -149,10 +149,16 @@ export default function Dashboard({ setActiveTab }) {
     datasets: [{
       label: 'Jumlah Pasien',
       data: Object.values(data.ageGroupCounts || {}),
-      backgroundColor: ['#f59e0b', '#10b981', '#06b6d4', '#0284c7', '#8b5cf6'],
-      hoverBackgroundColor: ['#d97706', '#059669', '#0891b2', '#0369a1', '#7c3aed'],
-      borderRadius: 8,
-      maxBarThickness: 42
+      backgroundColor: [
+        '#f59e0b', '#10b981', '#06b6d4', '#0284c7', '#3b82f6',
+        '#6366f1', '#8b5cf6', '#d946ef', '#ec4899', '#f43f5e'
+      ],
+      hoverBackgroundColor: [
+        '#d97706', '#059669', '#0891b2', '#0369a1', '#2563eb',
+        '#4f46e5', '#7c3aed', '#c026d3', '#db2777', '#e11d48'
+      ],
+      borderRadius: 6,
+      maxBarThickness: 36
     }]
   };
 

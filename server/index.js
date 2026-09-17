@@ -55,13 +55,38 @@ function getAge(birthDateStr) {
   return age < 0 ? 0 : age;
 }
 
-// Helper Age Grouping (REQ-08)
-function getAgeGroup(age) {
-  if (age <= 5) return 'Balita (0-5 th)';
-  if (age <= 11) return 'Anak-Anak (6-11 th)';
-  if (age <= 25) return 'Remaja (12-25 th)';
-  if (age <= 45) return 'Dewasa (26-45 th)';
-  return 'Lansia (>45 th)';
+// Helper Age Grouping (Disesuaikan kebutuhan Klinik)
+function getAgeGroup(birthDateStr) {
+  if (!birthDateStr) return '20–44 th';
+  const today = new Date();
+  const birth = new Date(birthDateStr);
+  const diffTime = today - birth;
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+  if (diffDays >= 0 && diffDays <= 7) return '0–7 hr';
+  if (diffDays >= 8 && diffDays <= 20) return '8–20 hr';
+
+  let months = (today.getFullYear() - birth.getFullYear()) * 12 + (today.getMonth() - birth.getMonth());
+  if (today.getDate() < birth.getDate()) {
+    months--;
+  }
+
+  if (months >= 1 && months <= 11 && diffDays > 20) return '1–11 bln';
+
+  let years = today.getFullYear() - birth.getFullYear();
+  const m = today.getMonth() - birth.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
+    years--;
+  }
+  if (years < 0) years = 0;
+
+  if (years >= 1 && years <= 4) return '1–4 th';
+  if (years >= 5 && years <= 9) return '5–9 th';
+  if (years >= 10 && years <= 14) return '10–14 th';
+  if (years >= 15 && years <= 19) return '15–19 th';
+  if (years >= 20 && years <= 44) return '20–44 th';
+  if (years >= 44 && years <= 60) return '44–60 th';
+  return '>60 th';
 }
 
 // Generate No. RM (RM-YYYY-XXXX)
@@ -279,7 +304,7 @@ app.get('/api/kunjungan', async (req, res) => {
         nama_poli: poli.nama_poli || '',
         nama_dokter: dokter.nama_dokter || '',
         usia: age,
-        rentang_usia: getAgeGroup(age)
+        rentang_usia: getAgeGroup(pasien.tanggal_lahir)
       };
     });
 
@@ -500,7 +525,7 @@ app.get('/api/rekapitulasi', async (req, res) => {
         nama_poli: poli.nama_poli || '',
         nama_dokter: dokter.nama_dokter || '',
         usia: age,
-        rentang_usia: getAgeGroup(age)
+        rentang_usia: getAgeGroup(pasien.tanggal_lahir)
       };
     });
 
@@ -520,11 +545,16 @@ app.get('/api/rekapitulasi', async (req, res) => {
     const penjaminCounts = { Umum: 0, 'BPJS/JKN': 0 };
     const genderCounts = { L: 0, P: 0 };
     const ageGroupCounts = {
-      'Balita (0-5 th)': 0,
-      'Anak-Anak (6-11 th)': 0,
-      'Remaja (12-25 th)': 0,
-      'Dewasa (26-45 th)': 0,
-      'Lansia (>45 th)': 0
+      '0–7 hr': 0,
+      '8–20 hr': 0,
+      '1–11 bln': 0,
+      '1–4 th': 0,
+      '5–9 th': 0,
+      '10–14 th': 0,
+      '15–19 th': 0,
+      '20–44 th': 0,
+      '44–60 th': 0,
+      '>60 th': 0
     };
     const poliCounts = {};
 

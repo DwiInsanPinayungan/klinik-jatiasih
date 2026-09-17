@@ -30,13 +30,16 @@ export const exportToExcel = (data = [], summary = {}, filterInfo = {}) => {
       [],
       ['💳 REKAPITULASI PENJAMIN (REQ-06)', '', '', '', '👶 REKAPITULASI KELOMPOK USIA (REQ-08)'],
       ['Kategori Penjamin', 'Jumlah Pasien', 'Persentase', '', 'Rentang Usia Klinik', 'Jumlah Pasien', 'Persentase'],
-      ['Penjamin BPJS / JKN', summary.penjaminCounts?.['BPJS/JKN'] || 0, getPercent(summary.penjaminCounts?.['BPJS/JKN'] || 0, total), '', 'Balita (0 - 5 Tahun)', summary.ageGroupCounts?.['Balita (0-5 th)'] || 0, getPercent(summary.ageGroupCounts?.['Balita (0-5 th)'] || 0, total)],
-      ['Penjamin Umum', summary.penjaminCounts?.Umum || 0, getPercent(summary.penjaminCounts?.Umum || 0, total), '', 'Anak-Anak (6 - 11 Tahun)', summary.ageGroupCounts?.['Anak-Anak (6-11 th)'] || 0, getPercent(summary.ageGroupCounts?.['Anak-Anak (6-11 th)'] || 0, total)],
-      ['', '', '', '', 'Remaja (12 - 25 Tahun)', summary.ageGroupCounts?.['Remaja (12-25 th)'] || 0, getPercent(summary.ageGroupCounts?.['Remaja (12-25 th)'] || 0, total)],
-      ['👥 DEMOGRAFI JENIS KELAMIN (REQ-07)', '', '', '', 'Dewasa (26 - 45 Tahun)', summary.ageGroupCounts?.['Dewasa (26-45 th)'] || 0, getPercent(summary.ageGroupCounts?.['Dewasa (26-45 th)'] || 0, total)],
-      ['Jenis Kelamin', 'Jumlah Pasien', 'Persentase', '', 'Lansia (>45 Tahun)', summary.ageGroupCounts?.['Lansia (>45 th)'] || 0, getPercent(summary.ageGroupCounts?.['Lansia (>45 th)'] || 0, total)],
-      ['Laki-Laki (L)', summary.genderCounts?.L || 0, getPercent(summary.genderCounts?.L || 0, total), '', '', '', ''],
-      ['Perempuan (P)', summary.genderCounts?.P || 0, getPercent(summary.genderCounts?.P || 0, total), '', '', '', ''],
+      ['Penjamin BPJS / JKN', summary.penjaminCounts?.['BPJS/JKN'] || 0, getPercent(summary.penjaminCounts?.['BPJS/JKN'] || 0, total), '', '0 – 7 Hari', summary.ageGroupCounts?.['0–7 hr'] || 0, getPercent(summary.ageGroupCounts?.['0–7 hr'] || 0, total)],
+      ['Penjamin Umum', summary.penjaminCounts?.Umum || 0, getPercent(summary.penjaminCounts?.Umum || 0, total), '', '8 – 20 Hari', summary.ageGroupCounts?.['8–20 hr'] || 0, getPercent(summary.ageGroupCounts?.['8–20 hr'] || 0, total)],
+      ['', '', '', '', '1 – 11 Bulan', summary.ageGroupCounts?.['1–11 bln'] || 0, getPercent(summary.ageGroupCounts?.['1–11 bln'] || 0, total)],
+      ['👥 DEMOGRAFI JENIS KELAMIN (REQ-07)', '', '', '', '1 – 4 Tahun', summary.ageGroupCounts?.['1–4 th'] || 0, getPercent(summary.ageGroupCounts?.['1–4 th'] || 0, total)],
+      ['Jenis Kelamin', 'Jumlah Pasien', 'Persentase', '', '5 – 9 Tahun', summary.ageGroupCounts?.['5–9 th'] || 0, getPercent(summary.ageGroupCounts?.['5–9 th'] || 0, total)],
+      ['Laki-Laki (L)', summary.genderCounts?.L || 0, getPercent(summary.genderCounts?.L || 0, total), '', '10 – 14 Tahun', summary.ageGroupCounts?.['10–14 th'] || 0, getPercent(summary.ageGroupCounts?.['10–14 th'] || 0, total)],
+      ['Perempuan (P)', summary.genderCounts?.P || 0, getPercent(summary.genderCounts?.P || 0, total), '', '15 – 19 Tahun', summary.ageGroupCounts?.['15–19 th'] || 0, getPercent(summary.ageGroupCounts?.['15–19 th'] || 0, total)],
+      ['', '', '', '', '20 – 44 Tahun', summary.ageGroupCounts?.['20–44 th'] || 0, getPercent(summary.ageGroupCounts?.['20–44 th'] || 0, total)],
+      ['', '', '', '', '44 – 60 Tahun', summary.ageGroupCounts?.['44–60 th'] || 0, getPercent(summary.ageGroupCounts?.['44–60 th'] || 0, total)],
+      ['', '', '', '', '> 60 Tahun', summary.ageGroupCounts?.['>60 th'] || 0, getPercent(summary.ageGroupCounts?.['>60 th'] || 0, total)],
       [],
       ['---------------------------------------------------------------------------------------------------------'],
       [],
@@ -277,11 +280,16 @@ export const exportToPDF = async (data = [], summary = {}, filterInfo = {}) => {
 
     // TABLE 2: REKAPITULASI KELOMPOK USIA (REQ-08) (Right Side Page 1)
     const ageGroupData = [
-      ['Balita (0 - 5 Tahun)', summary.ageGroupCounts?.['Balita (0-5 th)'] || 0, getPercent(summary.ageGroupCounts?.['Balita (0-5 th)'] || 0, total)],
-      ['Anak-Anak (6 - 11 Tahun)', summary.ageGroupCounts?.['Anak-Anak (6-11 th)'] || 0, getPercent(summary.ageGroupCounts?.['Anak-Anak (6-11 th)'] || 0, total)],
-      ['Remaja (12 - 25 Tahun)', summary.ageGroupCounts?.['Remaja (12-25 th)'] || 0, getPercent(summary.ageGroupCounts?.['Remaja (12-25 th)'] || 0, total)],
-      ['Dewasa (26 - 45 Tahun)', summary.ageGroupCounts?.['Dewasa (26-45 th)'] || 0, getPercent(summary.ageGroupCounts?.['Dewasa (26-45 th)'] || 0, total)],
-      ['Lansia (>45 Tahun)', summary.ageGroupCounts?.['Lansia (>45 th)'] || 0, getPercent(summary.ageGroupCounts?.['Lansia (>45 th)'] || 0, total)]
+      ['0 – 7 Hari', summary.ageGroupCounts?.['0–7 hr'] || 0, getPercent(summary.ageGroupCounts?.['0–7 hr'] || 0, total)],
+      ['8 – 20 Hari', summary.ageGroupCounts?.['8–20 hr'] || 0, getPercent(summary.ageGroupCounts?.['8–20 hr'] || 0, total)],
+      ['1 – 11 Bulan', summary.ageGroupCounts?.['1–11 bln'] || 0, getPercent(summary.ageGroupCounts?.['1–11 bln'] || 0, total)],
+      ['1 – 4 Tahun', summary.ageGroupCounts?.['1–4 th'] || 0, getPercent(summary.ageGroupCounts?.['1–4 th'] || 0, total)],
+      ['5 – 9 Tahun', summary.ageGroupCounts?.['5–9 th'] || 0, getPercent(summary.ageGroupCounts?.['5–9 th'] || 0, total)],
+      ['10 – 14 Tahun', summary.ageGroupCounts?.['10–14 th'] || 0, getPercent(summary.ageGroupCounts?.['10–14 th'] || 0, total)],
+      ['15 – 19 Tahun', summary.ageGroupCounts?.['15–19 th'] || 0, getPercent(summary.ageGroupCounts?.['15–19 th'] || 0, total)],
+      ['20 – 44 Tahun', summary.ageGroupCounts?.['20–44 th'] || 0, getPercent(summary.ageGroupCounts?.['20–44 th'] || 0, total)],
+      ['44 – 60 Tahun', summary.ageGroupCounts?.['44–60 th'] || 0, getPercent(summary.ageGroupCounts?.['44–60 th'] || 0, total)],
+      ['> 60 Tahun', summary.ageGroupCounts?.['>60 th'] || 0, getPercent(summary.ageGroupCounts?.['>60 th'] || 0, total)]
     ];
 
     runAutoTable({
@@ -289,7 +297,7 @@ export const exportToPDF = async (data = [], summary = {}, filterInfo = {}) => {
       margin: { left: 153, right: 14 },
       head: [['Kelompok Rentang Usia (REQ-08)', 'Jumlah', '% Persentase']],
       body: ageGroupData,
-      styles: { fontSize: 8, cellPadding: 2.5 },
+      styles: { fontSize: 8, cellPadding: 2 },
       headStyles: { fillColor: [79, 70, 229], textColor: [255, 255, 255], fontStyle: 'bold' },
       alternateRowStyles: { fillColor: [248, 250, 252] }
     });
