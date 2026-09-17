@@ -257,39 +257,57 @@ export async function initMysql() {
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
     `);
 
-    // Step 4: Seed jika tabel kosong
-    const [rowsPoli] = await pool.query('SELECT COUNT(*) as count FROM poli');
-    if (rowsPoli[0].count === 0) {
-      for (const p of initialSeed.poli) {
-        await pool.query('INSERT INTO poli (nama_poli) VALUES (?)', [p.nama_poli]);
+    // Step 4: Seed jika tabel kosong (dengan pencegahan Foreign Key Mismatch)
+    try {
+      const [rowsPoli] = await pool.query('SELECT COUNT(*) as count FROM poli');
+      if (rowsPoli[0].count === 0) {
+        for (const p of initialSeed.poli) {
+          await pool.query('INSERT IGNORE INTO poli (nama_poli) VALUES (?)', [p.nama_poli]);
+        }
       }
-    }
 
-    const [rowsDokter] = await pool.query('SELECT COUNT(*) as count FROM dokter');
-    if (rowsDokter[0].count === 0) {
-      for (const d of initialSeed.dokter) {
-        await pool.query('INSERT INTO dokter (nama_dokter, spesialisasi, poli_id) VALUES (?, ?, ?)', [d.nama_dokter, d.spesialisasi, d.poli_id]);
+      const [rowsDokter] = await pool.query('SELECT COUNT(*) as count FROM dokter');
+      if (rowsDokter[0].count === 0) {
+        for (const d of initialSeed.dokter) {
+          await pool.query('INSERT IGNORE INTO dokter (nama_dokter, spesialisasi, poli_id) VALUES (?, ?, ?)', [d.nama_dokter, d.spesialisasi, d.poli_id]);
+        }
       }
-    }
 
-    const [rowsPasien] = await pool.query('SELECT COUNT(*) as count FROM pasien');
-    if (rowsPasien[0].count === 0) {
-      for (const p of initialSeed.pasien) {
-        await pool.query(
-          'INSERT INTO pasien (no_rm, nama, nik, no_bpjs, tanggal_lahir, jenis_kelamin, alamat, no_hp) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-          [p.no_rm, p.nama, p.nik, p.no_bpjs, p.tanggal_lahir, p.jenis_kelamin, p.alamat, p.no_hp]
-        );
+      const [rowsPasien] = await pool.query('SELECT COUNT(*) as count FROM pasien');
+      if (rowsPasien[0].count === 0) {
+        for (const p of initialSeed.pasien) {
+          await pool.query(
+            'INSERT IGNORE INTO pasien (no_rm, nama, nik, no_bpjs, tanggal_lahir, jenis_kelamin, alamat, no_hp) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+            [p.no_rm, p.nama, p.nik, p.no_bpjs, p.tanggal_lahir, p.jenis_kelamin, p.alamat, p.no_hp]
+          );
+        }
       }
-    }
 
-    const [rowsKunjungan] = await pool.query('SELECT COUNT(*) as count FROM kunjungan');
-    if (rowsKunjungan[0].count === 0) {
-      for (const k of initialSeed.kunjungan) {
-        await pool.query(
-          'INSERT INTO kunjungan (no_registrasi, tanggal_kunjungan, waktu_kunjungan, pasien_id, status_pasien, poli_id, dokter_id, penjamin, no_kartu_penjamin, tindakan, catatan) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-          [k.no_registrasi, k.tanggal_kunjungan, k.waktu_kunjungan, k.pasien_id, k.status_pasien, k.poli_id, k.dokter_id, k.penjamin, k.no_kartu_penjamin, k.tindakan, k.catatan]
-        );
+      const [rowsKunjungan] = await pool.query('SELECT COUNT(*) as count FROM kunjungan');
+      if (rowsKunjungan[0].count === 0) {
+        const [pasiens] = await pool.query('SELECT id FROM pasien');
+        const [polis] = await pool.query('SELECT id FROM poli');
+        const [dokters] = await pool.query('SELECT id FROM dokter');
+
+        const validPasienIds = new Set(pasiens.map(p => p.id));
+        const validPoliIds = new Set(polis.map(p => p.id));
+        const validDokterIds = new Set(dokters.map(d => d.id));
+
+        for (const k of initialSeed.kunjungan) {
+          if (validPasienIds.has(k.pasien_id) && validPoliIds.has(k.poli_id) && validDokterIds.has(k.dokter_id)) {
+            try {
+              await pool.query(
+                'INSERT IGNORE INTO kunjungan (no_registrasi, tanggal_kunjungan, waktu_kunjungan, pasien_id, status_pasien, poli_id, dokter_id, penjamin, no_kartu_penjamin, tindakan, catatan) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                [k.no_registrasi, k.tanggal_kunjungan, k.waktu_kunjungan, k.pasien_id, k.status_pasien, k.poli_id, k.dokter_id, k.penjamin, k.no_kartu_penjamin, k.tindakan, k.catatan]
+              );
+            } catch (kunjunganErr) {
+              console.warn('Seed kunjungan warning:', kunjunganErr.message);
+            }
+          }
+        }
       }
+    } catch (seedError) {
+      console.warn('Notice: Seeding MySQL skip/partial:', seedError.message);
     }
 
     return true;

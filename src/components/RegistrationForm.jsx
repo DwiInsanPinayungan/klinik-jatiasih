@@ -498,7 +498,7 @@ export default function RegistrationForm({ onSuccess }) {
             ) : (
               <>
                 <CheckCircle2 className="w-5 h-5" />
-                <span>SIMPAN REGISTRASI PASIEN</span>
+                <span>SIMPAN DATA</span>
               </>
             )}
           </button>

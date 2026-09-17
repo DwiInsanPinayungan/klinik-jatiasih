@@ -23,6 +23,18 @@
       "alamat": "Jl Gresik Gadukan Utara, Morokrembangan, Surabaya",
       "no_hp": "089612793783",
       "created_at": "2026-09-13T05:49:02.970Z"
+    },
+    {
+      "id": 3,
+      "no_rm": "RM-2026-0003",
+      "nama": "Dwi Insan Pinayungan Pinayungan",
+      "nik": "",
+      "no_bpjs": "",
+      "tanggal_lahir": "2009-02-17",
+      "jenis_kelamin": "L",
+      "alamat": "Jl Gresik Gadukan Utara, Morokrembangan, Surabaya",
+      "no_hp": "089612793783",
+      "created_at": "2026-09-13T07:29:17.538Z"
     }
   ],
   "poli": [
@@ -124,6 +136,21 @@
       "tindakan": "Pemeriksaan Medis & Konsultasi",
       "catatan": "",
       "created_at": "2026-09-13T06:39:27.166Z"
+    },
+    {
+      "id": 4,
+      "no_registrasi": "REG-20260913-003",
+      "tanggal_kunjungan": "2026-09-13",
+      "waktu_kunjungan": "14:28",
+      "pasien_id": 3,
+      "status_pasien": "Baru",
+      "poli_id": 1,
+      "dokter_id": 1,
+      "penjamin": "BPJS/JKN",
+      "no_kartu_penjamin": "",
+      "tindakan": "Pemeriksaan Medis & Konsultasi",
+      "catatan": "",
+      "created_at": "2026-09-13T07:29:17.554Z"
     }
   ]
 }
